@@ -10,9 +10,9 @@ export default class Game extends Phaser.State {
 	constructor() {
 		super();
 
-		this.socket = new WebSocket('ws://141.252.214.94:5678');	
+		this.socket = new WebSocket('ws://141.252.214.94:5678');
 		this.socket.addEventListener('message', this.receive_socket_message);
-		this.receive_socket_message = this.receive_socket_message.bind(this);	
+		this.receive_socket_message = this.receive_socket_message.bind(this);
 		console.log(trajectory)	;
 	}
 
@@ -22,7 +22,7 @@ export default class Game extends Phaser.State {
 	}
 
 	create() {
-		let s = this.game.add.sprite(0, 0, 'road_map');
+		let road_map = this.game.add.sprite(0, 0, 'road_map');
 
 		this.test_car = new Trafic({
 			game: this.game,
