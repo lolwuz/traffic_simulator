@@ -10,7 +10,7 @@ export default class Game extends Phaser.State {
 	constructor() {
 		super();
 
-		this.socket = new WebSocket('ws://141.252.214.94:5678');
+		this.socket = new WebSocket('ws://127.0.0.1:5678');
 		this.socket.addEventListener('message', this.receive_socket_message);
 		this.receive_socket_message = this.receive_socket_message.bind(this);
 		console.log(trajectory)	;
@@ -41,6 +41,8 @@ export default class Game extends Phaser.State {
 	receive_socket_message(event) {
 		console.log('Message from server ', event.data);
 		let data = JSON.parse(event.data)
+
+	  	console.log(data)
 
 		this.text.setText(data.time);
 	}
