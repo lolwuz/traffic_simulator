@@ -23,17 +23,21 @@ class Server:
 
         self.server.run_forever()
 
-    def new_client(self, client):
+    def new_client(self, client, server):
         """ A new client was added to the server """
+        logging.info("client: " + str(client["id"]) + " has connected")
+
         data_frame = pandas.read_csv('intersects.csv', sep=";")
         matrix = data_frame.values
         traffic_lights = list(data_frame.columns.values)
+        del traffic_lights[0]
 
         new_controller = Controller(server, client, traffic_lights, matrix)
         self.controllers.append(new_controller)
 
-    def client_left(self, client):
+    def client_left(self, client, server):
         """ A client has disconnected from the server """
+        logging.info("client: " + str(client["id"]) + " has disconnected")
         for controller in self.controllers:
             if client["id"] == controller.client["id"]:
                 self.controllers.remove(controller)
@@ -45,8 +49,9 @@ class Server:
                 # Make a entry to a existing controller
                 entry_from_json = []
                 try:
-                    entry_from_json = json.load(message)
+                    entry_from_json = json.loads(message)
                 except:
+                    print(message)
                     logging.DEBUG("Not of type JSON")
                 controller.entry(entry_from_json)
 
@@ -61,7 +66,9 @@ class Server:
         def run(*args):
             data_frame = pandas.read_csv('intersects.csv', sep=";")
             matrix = data_frame.values
+
             traffic_lights = list(data_frame.columns.values)
+            del traffic_lights[0]
             client = {"id": 0}
             test_controller = Controller(self.server, client, traffic_lights, matrix)
             self.controllers.append(test_controller)

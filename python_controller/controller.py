@@ -76,13 +76,15 @@ class Controller:
                 if entry["light"] == light.name:
                     if light not in self.entries:
                         self.entries.append(light)
-                        print(light)
 
     def is_intersecting(self, light_one, light_two):
         light_index = self.light_names.index(light_one)
         entry_index = self.light_names.index(light_two)
 
-        intersect = self.intersections[light_index + 1][entry_index]
+        intersect = self.intersections[light_index][entry_index + 1]
+
+        if light_one == "C3.2" and light_two == "A1":
+            print("intersect: " + light_one)
 
         return intersect == '1'
 
