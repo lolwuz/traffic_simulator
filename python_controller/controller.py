@@ -1,63 +1,124 @@
+from constants import MINIMUM_TIMES
 import time
 import random
 import json
+import operator
+
+
+class Light:
+    def __init__(self, name):
+        self.name = name
+        self.status = "red"  # Status: green, orange or red
+        self.timer = 0   # Timer for traffic lights with a estimation timer
+        self.last_green = int(time.time())
+        self.minimum_time = MINIMUM_TIMES[name[0]]  # The lights minimum green Time
+
+    def to_dict(self):
+        return {"name": self.name, "status": self.status, "timer": self.timer}
+
+    def set_timer(self, timer):
+        self.timer = timer
+
+    def is_allowed_to_change(self):
+        """ Check time if the light is allowed to change """
+        time_difference = int(time.time() - self.last_green)
+        return time_difference >= self.minimum_time
 
 
 class Controller:
-    def __init__(self, traffic_lights, intersections):
+    def __init__(self, server, client, traffic_lights, intersections):
         """
         Controller
         :param traffic_lights: list of traffic_light names
         :param intersections: 2d numpy array of intersections
         """
-        self.traffic_lights = traffic_lights
+        self.server = server
+        self.client = client
+        self.light_names = traffic_lights
         self.intersections = intersections
         self.entries = []
+        self.lights = []
 
-        print(traffic_lights[1])
+        self.start()  # Set defaults for this controller
 
-    def entry(self, entry):
+    def start(self):
         """
-        A new road user has entered the simulation
-        :param entry: list of entered users
+        Turn all lights to red
         :return:
         """
-        random_light = random.choice(self.traffic_lights)
-        if random_light not in self.entries:
-            self.entries.append({"light": random_light, "time": time.time()})
+        for name in self.light_names:
+            self.lights.append(Light(name))
 
-    def update(self, socket):
-        waiting_lights = []
-        for entry in self.entries:
-            waiting_lights.append(entry["light"])
-        possible_lights = waiting_lights.copy()
-        impossible_lights = []
+        self.send()
 
-        for light in waiting_lights:
-            current_index = self.traffic_lights.index(light)
+    def send(self):
+        """ Serialize list of lights to JSON and send """
+        dict_array = []
 
-            for next_light in waiting_lights:
-                next_index = self.traffic_lights.index(next_light)
-                intersect = self.intersections[next_index][current_index]
-                if intersect == "1":
-                    if next_light in possible_lights:
-                        possible_lights.remove(next_light)
+        for light in self.lights:
+            dict_array.append(light.to_dict())
 
-                    if next_light not in impossible_lights:
-                        impossible_lights.append(next_light)
-                elif intersect == "x":
-                    if next_light in possible_lights:
-                        possible_lights.remove(next_light)
+        send_json = json.dumps(dict_array)
 
-        send_array = []
-        for light in possible_lights:
-            send_array.append({"light": light, "status": "green", "timer": 0})
+        # if statement for debuggingm n
+        if self.client["id"] == 0:
+            print(send_json)
+        else:
+            self.server.send_message(self.client, send_json)
 
-        for light in impossible_lights:
-            send_array.append({"light": light, "status": "red", "timer": 0})
+    def entry(self, entries):
+        """
+        A new road user has entered the simulation
+        :param entries: list of entered users
+        """
+        for entry in entries:
+            for light in self.lights:
+                if entry["light"] == light.name:
+                    if light not in self.entries:
+                        self.entries.append(light)
+                        print(light)
 
-        send_json = json.dumps(send_array)
-        print(send_json)
+    def is_intersecting(self, light_one, light_two):
+        light_index = self.light_names.index(light_one)
+        entry_index = self.light_names.index(light_two)
 
-        # send json
-        socket.send(send_json)
+        intersect = self.intersections[light_index + 1][entry_index]
+
+        return intersect == '1'
+
+    def get_lights(self):
+        handled_entries = self.entries.copy()
+
+        green_lights = []
+        orange_lights = []
+        red_lights = []
+
+        # Check for every entry
+
+        for entry_one in handled_entries:
+            for entry_two in handled_entries:
+                if self.is_intersecting(entry_one.name, entry_two.name):
+                    handled_entries.remove(entry_two)
+
+        # Handle entries
+        for light in self.lights:
+            if light in handled_entries:
+                light.status = "green"
+                light.last_green = int(time.time())
+                green_lights.append(light)
+            else:
+                light.status = "red"
+                light.last_green = int(time.time())
+                red_lights.append(light)
+
+        return green_lights + orange_lights + red_lights
+
+    def update(self):
+        lights = self.get_lights()
+
+        self.lights = lights
+        self.send()
+
+
+
+

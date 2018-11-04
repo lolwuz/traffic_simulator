@@ -1,64 +1,83 @@
 #!/usr/bin/env python
+import random
+
 from controller import Controller
+from websocket_server import WebsocketServer
 import json
-import websocket
+import logging
 import _thread as thread
 import pandas
 import time
 
 
-class Socket:
+class Server:
     def __init__(self):
-        websocket.enableTrace(True)
+        self.controllers = []
+        self.server = WebsocketServer(8080, host='127.0.0.1', loglevel=logging.INFO)
+        self.server.set_fn_new_client(self.new_client)
+        self.server.set_fn_client_left(self.client_left)
+        self.server.set_fn_message_received(self.on_message)
+
+        # Fake simulation
+        self.on_open()
+
+        self.server.run_forever()
+
+    def new_client(self, client):
+        """ A new client was added to the server """
         data_frame = pandas.read_csv('intersects.csv', sep=";")
         matrix = data_frame.values
-
         traffic_lights = list(data_frame.columns.values)
 
-        self.socket = websocket.WebSocketApp("ws://127.0.0.1:5678/",
-                                             on_message=self.on_message,
-                                             on_error=self.on_error,
-                                             on_close=self.on_close)
-        self.controller = Controller(traffic_lights, matrix)
-        self.start_time = time.time()
+        new_controller = Controller(server, client, traffic_lights, matrix)
+        self.controllers.append(new_controller)
 
-        self.start()
+    def client_left(self, client):
+        """ A client has disconnected from the server """
+        for controller in self.controllers:
+            if client["id"] == controller.client["id"]:
+                self.controllers.remove(controller)
 
-    def start(self):
-        self.socket.on_open = self.on_open
-        self.socket.run_forever()
+    def on_message(self, client, server, message):
+        # Select the right controller
+        for controller in self.controllers:
+            if client["id"] == controller.client["id"]:
+                # Make a entry to a existing controller
+                entry_from_json = []
+                try:
+                    entry_from_json = json.load(message)
+                except:
+                    logging.DEBUG("Not of type JSON")
+                controller.entry(entry_from_json)
 
     def update(self):
-        print("UPDATE")
-        self.controller.update(self.socket)
+        time.sleep(1)
+        for controller in self.controllers:
+            controller.update()
 
-        # Eat, sleap, rave, repeat
-        time.sleep(1.0 - ((time.time() - self.start_time) % 1.0))
         self.update()
-
-    def on_message(self, message):
-        # Decode JSON to Python Object
-        print(message)
-        entry_from_json = message  # json.load(message)
-        self.controller.entry(entry_from_json)
-
-    def on_error(self, error):
-        print(error)
-
-    def on_close(self):
-        print("### closed ###")
 
     def on_open(self):
         def run(*args):
-            for i in range(30):
+            data_frame = pandas.read_csv('intersects.csv', sep=";")
+            matrix = data_frame.values
+            traffic_lights = list(data_frame.columns.values)
+            client = {"id": 0}
+            test_controller = Controller(self.server, client, traffic_lights, matrix)
+            self.controllers.append(test_controller)
+
+            while True:
                 time.sleep(1)
-                self.socket.send("Hello %d" % i)
+
+                random_light = random.choice(traffic_lights)
+                test_controller.entry([{"light": random_light, "time": time.time()}])
+
             time.sleep(1)
-            self.socket.close()
+            self.server.close()
 
         thread.start_new_thread(run, ())
         thread.start_new_thread(self.update, ())
 
 
 if __name__ == "__main__":
-    socket = Socket()
+    server = Server()

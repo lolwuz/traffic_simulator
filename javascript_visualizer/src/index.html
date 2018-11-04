@@ -55,13 +55,6 @@
 	el: '#app',
 	data: {
 	  message: 'Hello Vue!'
-	},
-	created: function () {
-	  this.socket = new WebSocket('ws://127.0.0.1:5678')
-	  this.socket.addEventListener('message', function (event) {
-		let data = JSON.parse(event.data)
-		this.message = data
-	  }.bind(this));
 	}
   })
 </script>
