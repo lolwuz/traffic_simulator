@@ -13,7 +13,7 @@ import time
 class Server:
     def __init__(self):
         self.controllers = []
-        self.server = WebsocketServer(8080, host='127.0.0.1', loglevel=logging.INFO)
+        self.server = WebsocketServer(8080, host='127.0.0.1')
         self.server.set_fn_new_client(self.new_client)
         self.server.set_fn_client_left(self.client_left)
         self.server.set_fn_message_received(self.on_message)

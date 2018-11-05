@@ -10,7 +10,7 @@ class Light:
         self.name = name
         self.status = "red"  # Status: green, orange or red
         self.timer = 0   # Timer for traffic lights with a estimation timer
-        self.last_green = int(time.time())
+        self.last_green = time.time()
         self.minimum_time = MINIMUM_TIMES[name[0]]  # The lights minimum green Time
 
     def to_dict(self):
@@ -21,7 +21,7 @@ class Light:
 
     def is_allowed_to_change(self):
         """ Check time if the light is allowed to change """
-        time_difference = int(time.time() - self.last_green)
+        time_difference = time.time() - self.last_green
         return time_difference >= self.minimum_time
 
 
@@ -62,9 +62,10 @@ class Controller:
 
         # if statement for debuggingm n
         if self.client["id"] == 0:
-            print(send_json)
+            self.server.send_message_to_all(send_json)
         else:
-            self.server.send_message(self.client, send_json)
+            pass
+            # self.server.send_message(self.client, send_json)
 
     def entry(self, entries):
         """
@@ -83,20 +84,21 @@ class Controller:
 
         intersect = self.intersections[light_index][entry_index + 1]
 
-        if light_one == "C3.2" and light_two == "A1":
-            print("intersect: " + light_one)
-
         return intersect == '1'
 
     def get_lights(self):
+        is_changed = False
         handled_entries = self.entries.copy()
+
+        # handled_entries.sort(key=lambda x: x.last_green, reverse=False)
+
+        print(self.entries)
 
         green_lights = []
         orange_lights = []
         red_lights = []
 
         # Check for every entry
-
         for entry_one in handled_entries:
             for entry_two in handled_entries:
                 if self.is_intersecting(entry_one.name, entry_two.name):
@@ -105,21 +107,36 @@ class Controller:
         # Handle entries
         for light in self.lights:
             if light in handled_entries:
+                if light.status == "red":
+                    is_changed = True
+
                 light.status = "green"
-                light.last_green = int(time.time())
                 green_lights.append(light)
             else:
+                if light.status == "green":
+                    is_changed = True
+
                 light.status = "red"
-                light.last_green = int(time.time())
                 red_lights.append(light)
 
-        return green_lights + orange_lights + red_lights
+        return (green_lights + orange_lights + red_lights), is_changed
 
     def update(self):
-        lights = self.get_lights()
+        new_lights, is_changed = self.get_lights()
 
-        self.lights = lights
-        self.send()
+        if is_changed:
+            # Check if allowed to change
+            for light in new_lights:
+                if light.status == "green":
+                    if not light.is_allowed_to_change():
+                        return
+                    else:
+                        for entry in self.entries:
+                            if entry is light:
+                                light.last_green = time.time()
+                                self.entries.remove(entry)
+            self.send()
+
 
 
 
