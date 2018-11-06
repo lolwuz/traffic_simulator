@@ -1,5 +1,13 @@
-# MacOS temp files
+# MacOS
 .DS_Store
+._*
 
-# JetBrains IDE
+# JetBrains
 .idea/
+out/
+
+# Visual Studio Code
+.vscode/
+
+# Python
+__pycache__/
