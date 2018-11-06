@@ -71,10 +71,10 @@
 
 <script>
   // Create WebSocket connection.
-  const socket = new WebSocket('ws://localhost:8080')
+  const socket = new WebSocket('ws://141.252.234.181:8080')
   const lights = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B1', 'B2', 'B3', 'C1.1', 'C1.2', 'C2.1', 'C2.2', 'C3.1', 'C3.2', 'D1', 'E1']
+  var server_data = []
 
-  console.log(lights)
   // Add lights
   for (let i = 0; i < lights.length; i++) {
 	console.log('test')

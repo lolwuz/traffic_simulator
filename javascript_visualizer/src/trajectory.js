@@ -2,7 +2,7 @@ export default {
     car_west_south: [
         { x: 0 , y: 416 },
         { x: 146, y: 400 },
-        { x: 303, y: 397, light: "A12" },
+        { x: 240, y: 397, light: "A1" },
         { x: 411, y: 414 },
         { x: 552, y: 467 },
         { x: 636, y: 534 },
