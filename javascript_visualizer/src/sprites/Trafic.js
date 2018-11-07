@@ -2,21 +2,16 @@ import Phaser from 'phaser'
 
 
 export default class Trafic extends Phaser.Sprite {
-	constructor({ game, x, y, asset, trajectory_array, speed, socket, type }) {
+	constructor({ game, x, y, asset, trajectory_array, speed, type }) {
 		super(game, 0, 0, asset)
-		this.socket = socket
+		
 		this.type = type
-
 		this.trajectory_array_passed = []
 		this.trajectory_array = trajectory_array
 		this.speed = speed
 		this.stopped = false
 	}
 
-	traffic_light(point) {
-		this.socket.send()
-		this.stopped = true
-	}
 
 	is_point_reached(point) {
 		let tx = point.x - this.x
@@ -27,40 +22,49 @@ export default class Trafic extends Phaser.Sprite {
 	}
 
 	move_to_point(point, i) {
+		this.stopped = false
 		if (this.is_point_reached(point)) {
 			if (typeof point.light != "undefined") {
 				for (let i = 0; i < server_data.length; i++) {
 					let lights = server_data[i]
-					console.log(lights.light)
-					
-					if (lights.light == point.light) {
+
+					if (point.light == lights.light) {
+						let send_array = [point.light] 
+						
+						socket.send(JSON.stringify(send_array))
+						
+
 						if (lights.status == "green") {
-							this.trajectory_array_passed.push(i)
-							this.stopped = false
+							console.log("green")
+							break
 						}
 						else if (lights.status == "orange" || lights.status == "red") {
 							this.stopped = true
+							console.log("red")
+							break
 						}
 					}
 				}
-			} else {
+			}
+			
+			if(!this.stopped) {
 				this.trajectory_array_passed.push(i)
 			}
 
 
+		} else {
+			let tx = point.x - this.x
+			let ty = point.y - this.y
+			let distance = Math.sqrt(tx * tx + ty * ty)
+			let rad = Math.atan2(ty, tx)
+			let angle = rad / Math.PI * 180
+			let velocity_x = (tx / distance) * this.speed
+			let velocity_y = (ty / distance) * this.speed
+
+			this.x += velocity_x
+			this.y += velocity_y
+			this.angle = angle
 		}
-
-		let tx = point.x - this.x
-		let ty = point.y - this.y
-		let distance = Math.sqrt(tx * tx + ty * ty)
-		let rad = Math.atan2(ty, tx)
-		let angle = rad / Math.PI * 180
-		let velocity_x = (tx / distance) * this.speed
-		let velocity_y = (ty / distance) * this.speed
-
-		this.x += velocity_x
-		this.y += velocity_y
-		this.angle = angle
 
 	}
 
@@ -69,9 +73,7 @@ export default class Trafic extends Phaser.Sprite {
 			let point = this.trajectory_array[i]
 
 			if (this.trajectory_array_passed.indexOf(i) === -1) {
-				if(!this.stopped){
-					this.move_to_point(point, i)
-				}
+				this.move_to_point(point, i)
 				return
 			}
 		}

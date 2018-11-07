@@ -25,7 +25,6 @@ export default class Game extends Phaser.State {
 			asset: 'top_car',
 			trajectory_array: trajectory.car_west_south,
 			speed: 5,
-			socket: this.socket,
 			type: "car"
 		});
 
