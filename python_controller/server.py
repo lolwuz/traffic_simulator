@@ -60,9 +60,9 @@ class Server:
             print("current_phase: " + controller.current_phase)
             print("waiting: " + str(controller.entries))
 
-    def client_left(self, client, server):
+    def client_left(self, client):
         """ A client has disconnected from the server """
-        logging.info("client: " + str(client["id"]) + " has disconnected")
+        logging.info("client disconnected")
         for controller in self.controllers:
             if client["id"] == controller.client["id"]:
                 self.controllers.remove(controller)
