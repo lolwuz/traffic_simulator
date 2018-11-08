@@ -21,7 +21,7 @@ export default class Game extends Phaser.State {
       x: this.world.centerX,
       y: this.world.centerY,
       asset: 'top_car',
-      trajectory_array: trajectory.car_west_south,
+      trajectoryArray: trajectory.car_west_south,
       speed: 5,
       type: 'car'
     })

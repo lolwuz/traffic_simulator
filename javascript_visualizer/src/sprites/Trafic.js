@@ -22,7 +22,7 @@ export default class Trafic extends Phaser.Sprite {
 
   moveToPoint (point, i) {
     this.stopped = false
-    if (this.is_point_reached(point)) {
+    if (this.isPointReached(point)) {
       if (typeof point.light !== 'undefined') {
         for (let i = 0; i < serverData.length; i++) {
           let lights = serverData[i]
@@ -81,7 +81,7 @@ export default class Trafic extends Phaser.Sprite {
       let point = this.trajectoryArray[i]
 
       if (this.trajectoryArrayPassed.indexOf(i) === -1) {
-        this.move_to_point(point, i)
+        this.moveToPoint(point, i)
         return
       }
     }
