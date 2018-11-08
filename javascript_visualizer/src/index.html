@@ -77,9 +77,6 @@
 
   // Add lights
   for (let i = 0; i < lights.length; i++) {
-	console.log('test')
-	console.log(lights[i])
-
 	let light_html = `<div id="` + lights[i] + `" class="card text-white bg-danger mb-3"><div class="card-header"><b>` + lights[i] + `</b></div></div>`
 
 	if (i < 11)
@@ -96,8 +93,6 @@
   // Listen for messages
   socket.addEventListener('message', function (event) {
 	server_data = JSON.parse(event.data)
-
-	console.log(server_data)
 
     for(let i = 0; i < server_data.length; i++) {
       let light = server_data[i]

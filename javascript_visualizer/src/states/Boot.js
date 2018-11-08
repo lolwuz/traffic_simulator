@@ -7,6 +7,8 @@ export default class extends Phaser.State {
 		this.stage.backgroundColor = '#EDEEC9'
 		this.fontsReady = false
 		this.fontsLoaded = this.fontsLoaded.bind(this)
+
+		console.log(this.game.input)
 	}
 
 	preload() {

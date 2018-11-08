@@ -35,12 +35,10 @@ export default class Trafic extends Phaser.Sprite {
 						
 
 						if (lights.status == "green") {
-							console.log("green")
 							break
 						}
 						else if (lights.status == "orange" || lights.status == "red") {
 							this.stopped = true
-							console.log("red")
 							break
 						}
 					}
