@@ -5,7 +5,7 @@ import lang from '../lang'
 import { QuadTree } from 'phaser-ce';
 import trajectory from '../trajectory'
 
-
+var road_map;
 export default class Game extends Phaser.State {
 	
 	preload() {
@@ -14,9 +14,9 @@ export default class Game extends Phaser.State {
 	}
 
 	create() {
-		let road_map = this.game.add.sprite(0, 0, 'road_map');
-
-		
+		road_map = this.game.add.sprite(0, 0, 'road_map');
+		road_map.inputEnabled = true;
+		road_map.events.onInputDown.add(this.onDown,this)
 
 		this.test_car = new Trafic({
 			game: this.game,
@@ -30,5 +30,8 @@ export default class Game extends Phaser.State {
 
 		this.game.add.existing(this.test_car)
 	}
-
+	
+	onDown(sprite, pointer) {
+		Console.log(pointer)
+	}
 }
