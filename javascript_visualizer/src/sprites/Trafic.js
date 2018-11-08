@@ -1,79 +1,89 @@
+/* globals serverData, socket */
 import Phaser from 'phaser'
 
-
 export default class Trafic extends Phaser.Sprite {
-	constructor({ game, x, y, asset, trajectory_array, speed, type }) {
-		super(game, 0, 0, asset)
-		
-		this.type = type
-		this.trajectory_array_passed = []
-		this.trajectory_array = trajectory_array
-		this.speed = speed
-		this.stopped = false
-	}
+  constructor ({game, x, y, asset, trajectoryArray, speed, type}) {
+    super(game, 0, 0, asset)
 
+    this.type = type
+    this.trajectoryArrayPassed = []
+    this.trajectoryArray = trajectoryArray
+    this.speed = speed
+    this.stopped = false
+  }
 
-	is_point_reached(point) {
-		let tx = point.x - this.x
-		let ty = point.y - this.y
-		let distance = Math.sqrt(tx * tx + ty * ty)
+  isPointReached (point) {
+    let tx = point.x - this.x
+    let ty = point.y - this.y
+    let distance = Math.sqrt(tx * tx + ty * ty)
 
-		return distance <= 10
-	}
+    return distance <= 10
+  }
 
-	move_to_point(point, i) {
-		this.stopped = false
-		if (this.is_point_reached(point)) {
-			if (typeof point.light != "undefined") {
-				for (let i = 0; i < server_data.length; i++) {
-					let lights = server_data[i]
+  moveToPoint (point, i) {
+    this.stopped = false
+    if (this.is_point_reached(point)) {
+      if (typeof point.light !== 'undefined') {
+        for (let i = 0; i < serverData.length; i++) {
+          let lights = serverData[i]
 
-					if (point.light == lights.light) {
-						let send_array = [point.light] 
-						
-						socket.send(JSON.stringify(send_array))
-						
+          if (point.light === lights.light) {
+            let sendArray = [point.light]
 
-						if (lights.status == "green") {
-							break
-						}
-						else if (lights.status == "orange" || lights.status == "red") {
-							this.stopped = true
-							break
-						}
-					}
-				}
-			}
-			
-			if(!this.stopped) {
-				this.trajectory_array_passed.push(i)
-			}
+            socket.send(JSON.stringify(sendArray))
 
+            if (lights.status === 'green') {
+              break
+            } else if (lights.status === 'orange' || lights.status === 'red') {
+              this.stopped = true
+              break
+            }
+          }
+        }
+      }
 
-		} else {
-			let tx = point.x - this.x
-			let ty = point.y - this.y
-			let distance = Math.sqrt(tx * tx + ty * ty)
-			let rad = Math.atan2(ty, tx)
-			let angle = rad / Math.PI * 180
-			let velocity_x = (tx / distance) * this.speed
-			let velocity_y = (ty / distance) * this.speed
+      if (!this.stopped) {
+        this.trajectoryArrayPassed.push(i)
+      }
+    } else {
+      let tx = point.x - this.x
+      let ty = point.y - this.y
+      let distance = Math.sqrt(tx * tx + ty * ty)
+      let rad = Math.atan2(ty, tx)
+      let angle = rad / Math.PI * 180
+      let velocityX = (tx / distance) * this.speed
+      let velocityY = (ty / distance) * this.speed
 
-			this.x += velocity_x
-			this.y += velocity_y
-			this.angle = angle
-		}
+      this.x += velocityX
+      this.y += velocityY
+      this.angle = angle
+    }
+  }
 
-	}
+  getLineXYatPercent (startPt, endPt, percent) {
+    let dx = endPt.x - startPt.x
+    let dy = endPt.y - startPt.y
+    let X = startPt.x + dx * percent
+    let Y = startPt.y + dy * percent
 
-	update() {
-		for (let i = 0; i < this.trajectory_array.length; i++) {
-			let point = this.trajectory_array[i]
+    return ({x: X, y: Y})
+  }
 
-			if (this.trajectory_array_passed.indexOf(i) === -1) {
-				this.move_to_point(point, i)
-				return
-			}
-		}
-	}
+  getQuadraticBezierXYatPercent (startPt, controlPt, endPt, percent) {
+    let x = Math.pow(1 - percent, 2) * startPt.x + 2 * (1 - percent) * percent * controlPt.x + Math.pow(percent, 2) * endPt.x
+    let y = Math.pow(1 - percent, 2) * startPt.y + 2 * (1 - percent) * percent * controlPt.y + Math.pow(percent, 2) * endPt.y
+
+    return x, y
+  }
+
+  update () {
+    for (let i = 0; i < this.trajectoryArray.length; i++) {
+      let point = this.trajectoryArray[i]
+
+      if (this.trajectoryArrayPassed.indexOf(i) === -1) {
+        this.move_to_point(point, i)
+        return
+      }
+    }
+  }
 }

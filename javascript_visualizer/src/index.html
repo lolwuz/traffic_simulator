@@ -73,7 +73,7 @@
   // Create WebSocket connection.
   const socket = new WebSocket('ws://159.69.219.206:8080')
   const lights = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B1', 'B2', 'B3', 'C1.1', 'C1.2', 'C2.1', 'C2.2', 'C3.1', 'C3.2', 'D1', 'E1']
-  var server_data = []
+  var serverData = []
 
   // Add lights
   for (let i = 0; i < lights.length; i++) {
@@ -92,10 +92,10 @@
 
   // Listen for messages
   socket.addEventListener('message', function (event) {
-	server_data = JSON.parse(event.data)
+	serverData = JSON.parse(event.data)
 
-    for(let i = 0; i < server_data.length; i++) {
-      let light = server_data[i]
+    for(let i = 0; i < serverData.length; i++) {
+      let light = serverData[i]
       let cl = 'card text-white bg-danger mb-3'
 
       switch(light.status) {
