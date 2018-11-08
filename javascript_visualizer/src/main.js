@@ -1,18 +1,16 @@
 import 'pixi'
 import 'p2'
 import Phaser from 'phaser'
-
 import BootState from './states/Boot'
 import SplashState from './states/Splash'
 import GameState from './states/Game'
-
 import config from './config'
 
 class Game extends Phaser.Game {
   constructor () {
     const docElement = document.documentElement
-    const width =  document.getElementById('phaser-container').clientWidth
-    const height =  document.getElementById('phaser-container').clientHeight
+    const width = document.getElementById('phaser-container').clientWidth
+    const height = document.getElementById('phaser-container').clientHeight
 
     super(width, height, Phaser.CANVAS, 'content', null)
 
