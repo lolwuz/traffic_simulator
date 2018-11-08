@@ -1,5 +1,5 @@
 export default {
-    car_west_south: [
+    carWestSouth: [
         { x: 0 , y: 416 },
         { x: 146, y: 400 },
         { x: 240, y: 397, light: "A1" },
