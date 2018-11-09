@@ -30,6 +30,10 @@ export default class extends Phaser.State {
 
     this.load.image('loaderBg', './assets/images/loader-bg.png')
     this.load.image('loaderBar', './assets/images/loader-bar.png')
+
+    this.game.camera.scale.x = 1
+    this.game.camera.scale.y = 1
+    // this.game.camera.focusOnXY(0, 0)
   }
 
   render () {
