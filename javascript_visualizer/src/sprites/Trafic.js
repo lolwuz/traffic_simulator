@@ -10,6 +10,31 @@ export default class Trafic extends Phaser.Sprite {
     this.trajectoryArray = trajectoryArray
     this.speed = speed
     this.stopped = false
+    this.targetAngle = 0
+  }
+
+  update () {
+    this.updateAngle()
+
+    for (let i = 0; i < this.trajectoryArray.length; i++) {
+      let point = this.trajectoryArray[i]
+
+      if (this.trajectoryArrayPassed.indexOf(i) === -1) {
+        this.moveToPoint(point, i)
+        return
+      }
+    }
+  }
+
+  updateAngle() {
+    console.log(this.targetAngle)
+    console.log(this.angle)
+
+    if (this.targetAngle > this.angle) {
+      this.angle += 1
+    } else {
+      this.angle -= 1
+    }
   }
 
   isPointReached (point) {
@@ -57,33 +82,6 @@ export default class Trafic extends Phaser.Sprite {
       this.x += velocityX
       this.y += velocityY
       this.angle = angle
-    }
-  }
-
-  getLineXYatPercent (startPt, endPt, percent) {
-    let dx = endPt.x - startPt.x
-    let dy = endPt.y - startPt.y
-    let X = startPt.x + dx * percent
-    let Y = startPt.y + dy * percent
-
-    return ({x: X, y: Y})
-  }
-
-  getQuadraticBezierXYatPercent (startPt, controlPt, endPt, percent) {
-    let x = Math.pow(1 - percent, 2) * startPt.x + 2 * (1 - percent) * percent * controlPt.x + Math.pow(percent, 2) * endPt.x
-    let y = Math.pow(1 - percent, 2) * startPt.y + 2 * (1 - percent) * percent * controlPt.y + Math.pow(percent, 2) * endPt.y
-
-    return x, y
-  }
-
-  update () {
-    for (let i = 0; i < this.trajectoryArray.length; i++) {
-      let point = this.trajectoryArray[i]
-
-      if (this.trajectoryArrayPassed.indexOf(i) === -1) {
-        this.moveToPoint(point, i)
-        return
-      }
     }
   }
 }

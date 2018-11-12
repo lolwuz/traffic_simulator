@@ -21,7 +21,7 @@ export default class Game extends Phaser.State {
     this.points = []
     this.lines = []
 
-    // this.debugPoints(console.log())
+    // this.debugPoints()
   }
 
   create () {

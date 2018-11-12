@@ -60,7 +60,7 @@ class Server:
             print("current_phase: " + controller.current_phase)
             print("waiting: " + str(controller.entries))
 
-    def client_left(self, client):
+    def client_left(self, client, server):
         """ A client has disconnected from the server """
         logging.info("client disconnected")
         for controller in self.controllers:
@@ -68,7 +68,7 @@ class Server:
                 self.controllers.remove(controller)
 
     def on_message(self, client, server, message):
-        # Select the right controller
+        """ Handles messages and json decoding """
         for controller in self.controllers:
             if client["id"] == controller.client["id"]:
                 # Make a entry to a existing controller
@@ -82,6 +82,7 @@ class Server:
                 controller.entry(entry_from_json)
 
     def update(self):
+        """ Updates the active controllers """
         while True:
             for controller in self.controllers:
                 controller.update()

@@ -11,3 +11,5 @@ out/
 
 # Python
 __pycache__/
+javascript_visualizer/.idea/workspace.xml
+*.xml
