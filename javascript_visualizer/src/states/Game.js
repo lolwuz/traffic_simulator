@@ -29,7 +29,7 @@ export default class Game extends Phaser.State {
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
 
-    this.debugPoints()
+    // this.debugPoints()
   }
 
   create () {
