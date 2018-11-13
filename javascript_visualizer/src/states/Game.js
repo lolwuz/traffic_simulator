@@ -55,7 +55,6 @@ export default class Game extends Phaser.State {
     this.updateScale(pointer)
     this.updatePosition(pointer)
     this.updateLights()
-    this.randomCar()
   }
 
   render () {
@@ -70,7 +69,7 @@ export default class Game extends Phaser.State {
       x: this.world.centerX,
       y: this.world.centerY,
       asset: 'top_car',
-      trajectoryArray: trajectory.carWestNorth,
+      trajectoryArray: trajectory.carNorthWest,
       speed: 4.1,
       type: 'car'
     })
@@ -149,8 +148,8 @@ export default class Game extends Phaser.State {
   }
 
   homePressed () {
-    for (let i = 0; i < trajectory.carWestSouth.length; i++) {
-      let newPoint = new Phaser.Point(trajectory.carWestSouth[i].x, trajectory.carWestSouth[i].y)
+    for (let i = 0; i < trajectory.carNorthWest.length; i++) {
+      let newPoint = new Phaser.Point(trajectory.carNorthWest[i].x, trajectory.carNorthWest[i].y)
       this.points.push(newPoint)
     }
     console.log(this.lines)
