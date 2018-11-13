@@ -4,9 +4,9 @@ import Trafic from '../sprites/Trafic'
 import trajectory from '../trajectory'
 
 let lights = [
-  { 'light': 'A1', 'x': 100, 'y': 50 },
-  { 'light': 'A2', 'x': 300, 'y': 50, 'r': 230 },
-  { 'light': 'A3', 'x': 500, 'y': 50, 'r': 230 }
+  {'light': 'A1', 'x': 100, 'y': 50},
+  {'light': 'A2', 'x': 300, 'y': 50, 'r': 230},
+  {'light': 'A3', 'x': 500, 'y': 50, 'r': 230}
 ]
 
 export default class Game extends Phaser.State {
@@ -165,11 +165,12 @@ export default class Game extends Phaser.State {
   homePressed () {
     for (let i = 0; i < trajectory.carWestSouth.length; i++) {
       let newPoint = new Phaser.Point(trajectory.carWestSouth[i].x, trajectory.carWestSouth[i].y)
-    for (let i = 0; i < trajectory.carNorthWest.length; i++) {
-      let newPoint = new Phaser.Point(trajectory.carNorthWest[i].x, trajectory.carNorthWest[i].y)
-      this.points.push(newPoint)
+      for (let i = 0; i < trajectory.carNorthWest.length; i++) {
+        let newPoint = new Phaser.Point(trajectory.carNorthWest[i].x, trajectory.carNorthWest[i].y)
+        this.points.push(newPoint)
+      }
+      console.log(this.lines)
     }
-    console.log(this.lines)
   }
 
   updateLights () {
