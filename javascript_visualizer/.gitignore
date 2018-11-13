@@ -4,6 +4,7 @@ platforms/
 plugins/
 dist/
 .vscode/
+.idea/
 *.log
 /index.html
 build/
