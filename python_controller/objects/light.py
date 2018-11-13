@@ -14,9 +14,6 @@ class Light:
     def to_dict(self):
         return {"light": self.name, "status": self.status, "timer": self.timer}
 
-    def set_timer(self, timer):
-        self.timer = timer
-
     def is_allowed_to_change(self):
         """ Check time if the light is allowed to change """
         green_difference = time.time() - self.last_green

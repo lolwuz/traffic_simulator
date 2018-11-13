@@ -62,7 +62,7 @@ class Server:
 
     def client_left(self, client, server):
         """ A client has disconnected from the server """
-        logging.info("client disconnected")
+        logging.info(self.controllers)
         for controller in self.controllers:
             if client["id"] == controller.client["id"]:
                 self.controllers.remove(controller)
