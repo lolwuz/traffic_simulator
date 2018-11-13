@@ -34,7 +34,7 @@ export default class Game extends Phaser.State {
       x: this.world.centerX,
       y: this.world.centerY,
       asset: 'top_car',
-      trajectoryArray: trajectory.carWestSouth,
+      trajectoryArray: trajectory.carWestNorth,
       speed: 5,
       type: 'car'
     })
@@ -59,6 +59,9 @@ export default class Game extends Phaser.State {
     spacebar.onDown.add(this.spacePressed, this)
     let deleteKnop = this.game.input.keyboard.addKey(Phaser.Keyboard.DELETE)
     deleteKnop.onDown.add(this.deletePressed, this)
+    let homeKnop = this.game.input.keyboard.addKey(Phaser.Keyboard.HOME)
+    homeKnop.onDown.add(this.homePressed, this)
+
   }
 
   mousePressed (point) {
@@ -95,6 +98,14 @@ export default class Game extends Phaser.State {
     this.lines.pop()
     this.points.pop()
 
+  }
+
+  homePressed () {
+    for (let i = 0; i < trajectory.carWestSouth.length; i++) {
+      let newPoint = new Phaser.Point(trajectory.carWestSouth[i].x, trajectory.carWestSouth[i].y)
+      this.points.push(newPoint)
+    }
+    console.log(this.lines)
   }
 
   update () {
