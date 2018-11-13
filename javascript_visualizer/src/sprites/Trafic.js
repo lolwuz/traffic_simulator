@@ -27,9 +27,6 @@ export default class Trafic extends Phaser.Sprite {
   }
 
   updateAngle() {
-    console.log(this.targetAngle)
-    console.log(this.angle)
-
     if (this.targetAngle > this.angle) {
       this.angle += 1
     } else {

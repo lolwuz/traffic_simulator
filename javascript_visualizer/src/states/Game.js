@@ -21,7 +21,7 @@ export default class Game extends Phaser.State {
     this.points = []
     this.lines = []
 
-    // this.debugPoints()
+    this.debugPoints()
   }
 
   create () {
@@ -38,8 +38,9 @@ export default class Game extends Phaser.State {
       speed: 5,
       type: 'car'
     })
-
+    this.testCar.anchor.set(0.65)
     this.game.add.existing(this.testCar)
+
 
     this.currentPoint = this.game.add.image(0, 0, 'centroid')
     this.currentPoint.anchor.set(0.5)
@@ -56,22 +57,27 @@ export default class Game extends Phaser.State {
     this.game.input.onDown.add(this.mousePressed, this)
     let spacebar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
     spacebar.onDown.add(this.spacePressed, this)
+    let deleteKnop = this.game.input.keyboard.addKey(Phaser.Keyboard.DELETE)
+    deleteKnop.onDown.add(this.deletePressed, this)
   }
 
   mousePressed (point) {
-    let position = new Phaser.Point(point.worldX, point.worldY)
-    this.points.push(position)
+    if (this.game.input.activePointer.leftButton.isDown) {
+      let position = new Phaser.Point(point.worldX, point.worldY)
+      this.points.push(position)
 
-    this.lines = []
+      this.lines = []
 
-    let lastPoint = new Phaser.Point(0, 0)
-    for (let i = 0; i < this.points.length; i++) {
-      let currentPoint = this.points[i]
-      if (lastPoint.x !== 0) {
-        let line = new Phaser.Line(lastPoint.x, lastPoint.y, currentPoint.x, currentPoint.y)
-        this.lines.push(line)
+      let lastPoint = new Phaser.Point(0, 0)
+      for (let i = 0; i < this.points.length; i++) {
+        let currentPoint = this.points[i]
+        if (lastPoint.x !== 0) {
+          let line = new Phaser.Line(lastPoint.x, lastPoint.y, currentPoint.x, currentPoint.y)
+          this.lines.push(line)
+          console.log(this.line)
+        }
+        lastPoint = currentPoint
       }
-      lastPoint = currentPoint
     }
   }
 
@@ -80,6 +86,15 @@ export default class Game extends Phaser.State {
 
     this.lines = []
     this.points = []
+  }
+
+  deletePressed () {
+    console.log(this.lines)
+    console.log(this.points)
+
+    this.lines.pop()
+    this.points.pop()
+
   }
 
   update () {
