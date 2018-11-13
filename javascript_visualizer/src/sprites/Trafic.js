@@ -35,9 +35,7 @@ export default class Trafic extends Phaser.Sprite {
       }
     }
 
-    if (this.trajectoryArray.length === this.trajectoryArrayPassed.length) {
-      this.destroy()
-    }
+    this.destroy()
   }
 
   updateFade () {
