@@ -83,6 +83,8 @@ export default class Game extends Phaser.State {
       game: this.game,
       x: -10,
       y: -10,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
       asset: 'top_car',
       trajectoryArray: trajectory[key],
       speed: 4.1,
@@ -168,7 +170,11 @@ export default class Game extends Phaser.State {
         this.points.push(newPoint)
       }
       console.log(this.lines)
+    for (let i = 0; i < trajectory.carNorthWest.length; i++) {
+      let newPoint = new Phaser.Point(trajectory.carNorthWest[i].x, trajectory.carNorthWest[i].y)
+      this.points.push(newPoint)
     }
+    console.log(this.lines)
   }
 
   updateLights () {

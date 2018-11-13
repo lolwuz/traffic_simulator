@@ -3,7 +3,7 @@ import Phaser from 'phaser'
 
 export default class Trafic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type}) {
-    super(game, 0, 0, asset)
+    super(game, x, y, asset)
 
     this.type = type
     this.trajectoryArrayPassed = []
@@ -12,10 +12,11 @@ export default class Trafic extends Phaser.Sprite {
     this.stopped = false
     this.targetAngle = 0
     this.anchor.set(0.5)
+    this.alpha = 0
   }
 
   update () {
-    this.updateAngle()
+    this.updateFade()
 
     for (let i = 0; i < this.trajectoryArray.length; i++) {
       let point = this.trajectoryArray[i]
@@ -31,7 +32,15 @@ export default class Trafic extends Phaser.Sprite {
     }
   }
 
-  updateAngle() {
+  updateFade () {
+    if (this.alpha < 1.00) {
+      this.alpha += 0.01
+    } else {
+      this.alpha = 1
+    }
+  }
+
+  updateAngle () {
     if (this.targetAngle > this.angle) {
       this.angle += 2
     } else {
@@ -83,7 +92,7 @@ export default class Trafic extends Phaser.Sprite {
 
       this.x += velocityX
       this.y += velocityY
-      this.targetAngle = angle
+      this.angle = angle
     }
   }
 }
