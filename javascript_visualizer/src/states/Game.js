@@ -55,6 +55,7 @@ export default class Game extends Phaser.State {
     this.updateScale(pointer)
     this.updatePosition(pointer)
     this.updateLights()
+    this.randomCar()
   }
 
   render () {
