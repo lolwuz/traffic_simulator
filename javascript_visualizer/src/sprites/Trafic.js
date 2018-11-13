@@ -28,9 +28,9 @@ export default class Trafic extends Phaser.Sprite {
 
   updateAngle() {
     if (this.targetAngle > this.angle) {
-      this.angle += 1
+      this.angle += 2
     } else {
-      this.angle -= 1
+      this.angle -= 2
     }
   }
 
@@ -78,7 +78,7 @@ export default class Trafic extends Phaser.Sprite {
 
       this.x += velocityX
       this.y += velocityY
-      this.angle = angle
+      this.targetAngle = angle
     }
   }
 }

@@ -1,8 +1,6 @@
 /* globals serverData */
 import Phaser from 'phaser'
 import Trafic from '../sprites/Trafic'
-import lang from '../lang'
-import {QuadTree} from 'phaser-ce'
 import trajectory from '../trajectory'
 
 let lights = [
@@ -42,7 +40,7 @@ export default class Game extends Phaser.State {
       y: this.world.centerY,
       asset: 'top_car',
       trajectoryArray: trajectory.carWestNorth,
-      speed: 5,
+      speed: 4.1,
       type: 'car'
     })
     this.testCar.anchor.set(0.65)
@@ -103,7 +101,6 @@ export default class Game extends Phaser.State {
     deleteKnop.onDown.add(this.deletePressed, this)
     let homeKnop = this.game.input.keyboard.addKey(Phaser.Keyboard.HOME)
     homeKnop.onDown.add(this.homePressed, this)
-
   }
 
   mousePressed (point) {
@@ -141,7 +138,6 @@ export default class Game extends Phaser.State {
     this.points.pop()
   }
 
-<<<<<<< HEAD
   homePressed () {
     for (let i = 0; i < trajectory.carWestSouth.length; i++) {
       let newPoint = new Phaser.Point(trajectory.carWestSouth[i].x, trajectory.carWestSouth[i].y)
@@ -150,16 +146,6 @@ export default class Game extends Phaser.State {
     console.log(this.lines)
   }
 
-  update () {
-    let pointer = this.game.input.activePointer
-
-    if (pointer.isDown && !this.isDown) {
-      this.isDown = true
-    }
-
-    if (pointer.isUp && this.isDown) {
-      this.isDown = false
-=======
   updateLights () {
     for (let i = 0; i < this.lightGraphics.length; i++) {
       let lightGraphic = this.lightGraphics[i]
@@ -186,7 +172,6 @@ export default class Game extends Phaser.State {
           lightGraphic.graphic.endFill()
         }
       }
->>>>>>> 92e5d111f84c311c4765a03e25f77206f64fd718
     }
   }
 
