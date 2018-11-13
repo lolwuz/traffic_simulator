@@ -3,7 +3,10 @@ www/
 platforms/
 plugins/
 dist/
+.idea/
+.idea/workspace.xml
 .vscode/
+*.xml
 *.log
 /index.html
 build/
