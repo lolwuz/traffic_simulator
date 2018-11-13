@@ -4,6 +4,11 @@ import Phaser from 'phaser'
 export default class Trafic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type}) {
     super(game, x, y, asset)
+    this.game.physics.enable(this, Phaser.Physics.ARCADE)
+    this.body.enable = true
+    this.body.collideWorldBounds = false
+    this.body.checkCollision.up = false
+    this.body.checkCollision.down = false
 
     this.type = type
     this.trajectoryArrayPassed = []
@@ -27,9 +32,7 @@ export default class Trafic extends Phaser.Sprite {
       }
     }
 
-    if (this.trajectoryArray.length === this.trajectoryArrayPassed.length) {
-      this.destroy()
-    }
+    this.destroy()
   }
 
   updateFade () {
