@@ -26,6 +26,9 @@ export default class Game extends Phaser.State {
     this.lines = []
     this.lightGraphics = []
 
+    this.lastSpawn = new Date().getTime()
+    this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
+
     this.debugPoints()
   }
 
@@ -39,6 +42,7 @@ export default class Game extends Phaser.State {
     this.currentPoint.alpha = 0.5
 
     this.createLights()
+    this.randomCar()
   }
 
   update () {
@@ -52,10 +56,17 @@ export default class Game extends Phaser.State {
       this.isDown = false
     }
 
+    // Random spawn objects
+    let time = new Date().getTime()
+    if (this.nextSpawn < time) {
+      this.lastSpawn = time
+      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
+      this.randomCar()
+    }
+
     this.updateScale(pointer)
     this.updatePosition(pointer)
     this.updateLights()
-    this.randomCar()
   }
 
   render () {
@@ -65,12 +76,15 @@ export default class Game extends Phaser.State {
   }
 
   randomCar () {
+    let trajectories = Object.keys(trajectory)
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
     let newCar = new Trafic({
       game: this.game,
-      x: this.world.centerX,
-      y: this.world.centerY,
+      x: -10,
+      y: -10,
       asset: 'top_car',
-      trajectoryArray: trajectory.carWestNorth,
+      trajectoryArray: trajectory[key],
       speed: 4.1,
       type: 'car'
     })
