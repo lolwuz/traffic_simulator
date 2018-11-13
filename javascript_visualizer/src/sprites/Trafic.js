@@ -21,9 +21,6 @@ export default class Trafic extends Phaser.Sprite {
   }
 
   update () {
-
-    this.game.physics.arcade.collide(sprite, sprite2)
-
     this.updateFade()
 
     for (let i = 0; i < this.trajectoryArray.length; i++) {
