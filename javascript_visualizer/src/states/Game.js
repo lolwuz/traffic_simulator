@@ -81,8 +81,6 @@ export default class Game extends Phaser.State {
 
     let newCar = new Trafic({
       game: this.game,
-      x: -10,
-      y: -10,
       x: trajectory[key][0].x,
       y: trajectory[key][0].y,
       asset: 'top_car',
