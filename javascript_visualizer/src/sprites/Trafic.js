@@ -11,6 +11,7 @@ export default class Trafic extends Phaser.Sprite {
     this.speed = speed
     this.stopped = false
     this.targetAngle = 0
+    this.anchor.set(0.5)
   }
 
   update () {

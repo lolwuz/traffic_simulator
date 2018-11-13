@@ -34,18 +34,6 @@ export default class Game extends Phaser.State {
     this.game.world.setBounds(0, 0, this.roadMap.width, this.roadMap.height)
     this.game.camera.focusOnXY(this.roadMap.width / 2, this.roadMap.height / 2)
 
-    this.testCar = new Trafic({
-      game: this.game,
-      x: this.world.centerX,
-      y: this.world.centerY,
-      asset: 'top_car',
-      trajectoryArray: trajectory.carWestNorth,
-      speed: 4.1,
-      type: 'car'
-    })
-    this.testCar.anchor.set(0.65)
-    this.game.add.existing(this.testCar)
-
     this.currentPoint = this.game.add.image(0, 0, 'centroid')
     this.currentPoint.anchor.set(0.5)
     this.currentPoint.alpha = 0.5
@@ -67,6 +55,7 @@ export default class Game extends Phaser.State {
     this.updateScale(pointer)
     this.updatePosition(pointer)
     this.updateLights()
+    this.randomCar()
   }
 
   render () {
@@ -75,21 +64,43 @@ export default class Game extends Phaser.State {
     }
   }
 
+  randomCar () {
+    let newCar = new Trafic({
+      game: this.game,
+      x: this.world.centerX,
+      y: this.world.centerY,
+      asset: 'top_car',
+      trajectoryArray: trajectory.carWestNorth,
+      speed: 4.1,
+      type: 'car'
+    })
+
+    this.game.add.existing(newCar)
+  }
+
   createLights () {
-    for (let i = 0; i < lights.length; i++) {
-      let graphics = this.game.add.graphics(lights[i].x, lights[i].y)
-      // draw a circle
-      graphics.lineStyle(0)
-      graphics.beginFill(0xFF0000, 0.6)
-      graphics.drawCircle(470, 40, 40)
-      graphics.endFill()
+    for (let property in trajectory) {
+      if (trajectory.hasOwnProperty(property)) {
+        let lights = trajectory[property]
+        for (let i = 0; i < lights.length; i++) {
+          if (typeof lights[i].light !== 'undefined' && typeof lights[i].light !== 'undefined') {
+            let graphics = this.game.add.graphics(lights[i].x, lights[i].y)
 
-      let light = {
-        graphic: graphics,
-        light: lights[i].light
+            // draw a circle
+            graphics.lineStyle(0)
+            graphics.beginFill(0xFF0000, 0.8)
+            graphics.drawCircle(470, 40, 40)
+            graphics.endFill()
+
+            let light = {
+              graphic: graphics,
+              light: lights[i].light
+            }
+
+            this.lightGraphics.push(light)
+          }
+        }
       }
-
-      this.lightGraphics.push(light)
     }
   }
 
@@ -116,7 +127,6 @@ export default class Game extends Phaser.State {
         if (lastPoint.x !== 0) {
           let line = new Phaser.Line(lastPoint.x, lastPoint.y, currentPoint.x, currentPoint.y)
           this.lines.push(line)
-          console.log(this.line)
         }
         lastPoint = currentPoint
       }
@@ -151,7 +161,7 @@ export default class Game extends Phaser.State {
       let lightGraphic = this.lightGraphics[i]
 
       for (let y = 0; y < serverData.length; y++) {
-        let light = serverData[i]
+        let light = serverData[y]
         let color = 0xFF0000
         if (light.light === lightGraphic.light) {
           switch (light.status) {
@@ -167,8 +177,8 @@ export default class Game extends Phaser.State {
 
           lightGraphic.graphic.clear()
           lightGraphic.graphic.lineStyle(0)
-          lightGraphic.graphic.beginFill(color, 0.6)
-          lightGraphic.graphic.drawCircle(470, 40, 40)
+          lightGraphic.graphic.beginFill(color, 0.8)
+          lightGraphic.graphic.drawCircle(0, 0, 40)
           lightGraphic.graphic.endFill()
         }
       }
