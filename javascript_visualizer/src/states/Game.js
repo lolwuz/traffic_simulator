@@ -163,8 +163,6 @@ export default class Game extends Phaser.State {
   }
 
   homePressed () {
-    for (let i = 0; i < trajectory.carWestSouth.length; i++) {
-      let newPoint = new Phaser.Point(trajectory.carWestSouth[i].x, trajectory.carWestSouth[i].y)
       for (let i = 0; i < trajectory.carNorthWest.length; i++) {
         let newPoint = new Phaser.Point(trajectory.carNorthWest[i].x, trajectory.carNorthWest[i].y)
         this.points.push(newPoint)
