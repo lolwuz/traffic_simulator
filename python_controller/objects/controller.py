@@ -1,3 +1,4 @@
+import time
 from constants import MINIMUM_TIMES, _PHASES
 from objects.light import Light
 import json
@@ -46,7 +47,7 @@ class Controller:
 
         send_json = json.dumps(dict_array)
 
-        if self.client["id"] == 0:
+        if self.client["id"] == 0:  # Debug
             pass
             # self.server.send_message_to_all(send_json)
         else:
@@ -111,11 +112,27 @@ class Controller:
             score = 0
             for entry in self.entries:
                 if entry in phase:
+                    waiting_factor = self.get_waiting_factor(entry)
                     score += 1
+                    score += waiting_factor
             if score > best_phase[1]:
                 best_phase = [key, score]
 
         return best_phase
+
+    def get_waiting_factor(self, name):
+        """ Calculates a factor based on waiting time """
+        light = self.get_light(name)
+        difference = time.time() - light.last_green
+        factor = round(difference / 20)
+
+        if name[0] == "D":  # Bus factor is higher
+            factor *= 2
+
+        if name[0] == "E":
+            factor = -1000
+
+        return factor
 
     def get_light(self, name):
         """
@@ -131,6 +148,14 @@ class Controller:
         return return_light
 
     def initialize_phase(self, phase_name):
+        """
+        Check if the lights can change and switch lights
+        :param phase_name: name of the phase
+        """
+        for light in self.lights:
+            if not light.is_allowed_to_change():
+                return
+
         self.current_phase = phase_name
         phase = self.phases[phase_name]
         for name in self.light_names:

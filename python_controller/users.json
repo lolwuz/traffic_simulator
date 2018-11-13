@@ -1,1 +1,23 @@
-[]
+[
+    {
+        "as": "AS1103 SURFnet bv",
+        "city": "Leeuwarden",
+        "country": "Netherlands",
+        "countryCode": "NL",
+        "isp": "Noordelijke Hogeschool Leeuwarden",
+        "lat": 53.2019,
+        "lon": 5.7972,
+        "org": "Noordelijke Hogeschool Leeuwarden",
+        "query": "141.252.234.182",
+        "region": "FR",
+        "regionName": "Friesland",
+        "status": "success",
+        "timezone": "Europe/Amsterdam",
+        "zip": "8911"
+    },
+    {
+        "message": "reserved range",
+        "query": "127.0.0.1",
+        "status": "fail"
+    }
+]
