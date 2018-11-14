@@ -14,20 +14,16 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: black;
         }
 
         #jquery-container {
             padding: 1rem 0 0 0;
+            display: none;
         }
 
         #phaser-container {
             padding: 0 0 0 0;
             height: 100vh;
-        }
-
-        .container-fluid {
-            background-color: black;
         }
 
         .list-group-item {
@@ -46,21 +42,21 @@
 </head>
 
 <body>
+<div id="jquery-container">
+    <div class="row">
+        <div class="col-6">
+            <ul id="light-col-1" class="list-group"></ul>
+        </div>
+        <div class="col-6">
+            <ul id="light-col-2" class="list-group"></ul>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="row">
-        <div id="phaser-container" class="col-10">
-            <div id="content"></div>
-        </div>
-        <div id="jquery-container" class="col-2">
-            <div class="row">
-                <div class="col-6">
-                    <ul id="light-col-1" class="list-group"></ul>
-                </div>
-                <div class="col-6">
-                    <ul id="light-col-2" class="list-group"></ul>
-                </div>
+        <div id="phaser-container" class="col-12">
+            <div id="content">
             </div>
-
         </div>
     </div>
 </div>

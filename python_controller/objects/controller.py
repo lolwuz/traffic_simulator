@@ -36,6 +36,8 @@ class Controller:
         for key in self.phases:
             self.phases[key] = self.get_complete_phase(self.phases[key])
 
+        print(self.phases)
+
         self.send()
 
     def send(self):
