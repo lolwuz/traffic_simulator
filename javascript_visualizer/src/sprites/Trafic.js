@@ -15,6 +15,7 @@ export default class Trafic extends Phaser.Sprite {
     this.trajectoryArray = trajectoryArray
     this.speed = speed
     this.stopped = false
+    this.isColliding = false
     this.targetAngle = 0
     this.anchor.set(0.5)
     this.alpha = 0
@@ -22,6 +23,7 @@ export default class Trafic extends Phaser.Sprite {
 
   update () {
     this.updateFade()
+    this.isColliding = this.checkCollision()
 
     for (let i = 0; i < this.trajectoryArray.length; i++) {
       let point = this.trajectoryArray[i]
@@ -33,6 +35,27 @@ export default class Trafic extends Phaser.Sprite {
     }
 
     this.destroy()
+  }
+
+  checkCollision () {
+    let children = this.game.world.children
+    for (let x = 0; x < children.length; x++) {
+      let traffic = children[x]
+      if (traffic.constructor === Trafic && traffic !== this) {
+        this.body.angle = this.angle
+
+        let tx = traffic.x - this.x
+        let ty = traffic.y - this.y
+        let distance = Math.sqrt(tx * tx + ty * ty)
+
+        if (distance < 80 &&
+          traffic.trajectoryArrayPassed.length > this.trajectoryArrayPassed.length &&
+          traffic.trajectoryArray === this.trajectoryArray) {
+          return true
+        }
+      }
+    }
+    return false
   }
 
   updateFade () {
@@ -85,17 +108,23 @@ export default class Trafic extends Phaser.Sprite {
         this.trajectoryArrayPassed.push(i)
       }
     } else {
-      let tx = point.x - this.x
-      let ty = point.y - this.y
-      let distance = Math.sqrt(tx * tx + ty * ty)
-      let rad = Math.atan2(ty, tx)
-      let angle = rad / Math.PI * 180
-      let velocityX = (tx / distance) * this.speed
-      let velocityY = (ty / distance) * this.speed
-
-      this.x += velocityX
-      this.y += velocityY
-      this.angle = angle
+      if (!this.isColliding) {
+        this.move(point)
+      }
     }
+  }
+
+  move (point) {
+    let tx = point.x - this.x
+    let ty = point.y - this.y
+    let distance = Math.sqrt(tx * tx + ty * ty)
+    let rad = Math.atan2(ty, tx)
+    let angle = rad / Math.PI * 180
+    let velocityX = (tx / distance) * this.speed
+    let velocityY = (ty / distance) * this.speed
+
+    this.x += velocityX
+    this.y += velocityY
+    this.angle = angle
   }
 }
