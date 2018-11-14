@@ -60,11 +60,14 @@ export default class Game extends Phaser.State {
     let time = new Date().getTime()
     if (this.nextSpawn < time) {
       this.lastSpawn = time
+<<<<<<< HEAD
       this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (400 - 100)) + 50
       this.randomCar()
+=======
       this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 100
       this.randomVehicle()
       // this.randomCar()
+>>>>>>> bc21d492caebc7251fdd8a27fbbf70b0467c8946
     }
 
     this.updateScale(pointer)
@@ -90,7 +93,6 @@ export default class Game extends Phaser.State {
     let trajectories = Object.keys(trajectory)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
-    let newCar = new Trafic({
     return new Trafic({
       game: this.game,
       x: trajectory[key][0].x,
