@@ -12,7 +12,7 @@ export default class extends Phaser.State {
     // load your assets
     //
     this.load.image('road_map', './assets/images/road_map_small.png')
-    this.load.image('top_car', './assets/images/top_car.png')
+    this.load.image('top_car', './assets/images/regular_traffic/top_car.png')
   }
 
   create () {
