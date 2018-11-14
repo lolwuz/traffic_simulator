@@ -20,6 +20,9 @@ export default class Game extends Phaser.State {
     this.lines = []
     this.lightGraphics = []
 
+    this.available_sprites = ['regular_car_1', 'regular_car_2', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
+    this.available_sprites.anchors = []
+
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
 
@@ -59,6 +62,9 @@ export default class Game extends Phaser.State {
       this.lastSpawn = time
       this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (400 - 100)) + 50
       this.randomCar()
+      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 100
+      this.randomVehicle()
+      // this.randomCar()
     }
 
     this.updateScale(pointer)
@@ -72,6 +78,14 @@ export default class Game extends Phaser.State {
     }
   }
 
+  randomVehicle () {
+    let rand = Math.floor(Math.random() * 10)
+    if (rand < 9)
+      this.game.add.existing(this.randomCar())
+    else //(rand === 5)
+      this.game.add.existing(this.randomTruck())
+  }
+
   randomCar () {
     let trajectories = Object.keys(trajectory)
     let key = trajectories[trajectories.length * Math.random() << 0]
@@ -80,13 +94,29 @@ export default class Game extends Phaser.State {
       game: this.game,
       x: trajectory[key][0].x,
       y: trajectory[key][0].y,
-      asset: 'top_car',
+      asset: this.available_sprites[Math.floor(Math.random() * this.available_sprites.length)],
+      // asset: 'top_car',
       trajectoryArray: trajectory[key],
       speed: 4.1,
-      type: 'car'
+      type: 'car',
+      anchorPoint: 0.5
     })
+  }
 
-    this.game.add.existing(newCar)
+  randomTruck () {
+    let trajectories = Object.keys(trajectory)
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Trafic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: 'truck_1',
+      trajectoryArray: trajectory[key],
+      speed: 3.5,
+      type: 'truck',
+      anchorPoint: 0.7
+    })
   }
 
   createLights () {

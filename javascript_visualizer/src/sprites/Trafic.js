@@ -2,7 +2,7 @@
 import Phaser from 'phaser'
 
 export default class Trafic extends Phaser.Sprite {
-  constructor ({game, x, y, asset, trajectoryArray, speed, type}) {
+  constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint}) {
     super(game, x, y, asset)
     this.game.physics.p2.enable(this)
 
@@ -13,7 +13,7 @@ export default class Trafic extends Phaser.Sprite {
     this.stopped = false
     this.isColliding = false
     this.targetAngle = 0
-    this.anchor.set(0.5)
+    this.anchor.set(anchorPoint)
     this.alpha = 0
   }
 
