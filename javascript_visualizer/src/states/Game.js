@@ -27,6 +27,9 @@ export default class Game extends Phaser.State {
   }
 
   create () {
+    this.game.physics.startSystem(Phaser.Physics.P2JS)
+    this.game.physics.p2.restitution = 0.9
+
     this.roadMap = this.game.add.sprite(0, 0, 'road_map')
     this.game.world.setBounds(0, 0, this.roadMap.width, this.roadMap.height)
     this.game.camera.focusOnXY(this.roadMap.width / 2, this.roadMap.height / 2)
@@ -54,7 +57,7 @@ export default class Game extends Phaser.State {
     let time = new Date().getTime()
     if (this.nextSpawn < time) {
       this.lastSpawn = time
-      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 100
+      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (400 - 100)) + 50
       this.randomCar()
     }
 

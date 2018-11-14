@@ -13,6 +13,7 @@ class Controller:
         """
         self.server = server
         self.client = client
+        self.last_send = dict()
         self.light_names = traffic_lights
         self.intersections = intersections
         self.entries = []
@@ -36,8 +37,6 @@ class Controller:
         for key in self.phases:
             self.phases[key] = self.get_complete_phase(self.phases[key])
 
-        print(self.phases)
-
         self.send()
 
     def send(self):
@@ -47,13 +46,15 @@ class Controller:
         for light in self.lights:
             dict_array.append(light.to_dict())
 
-        send_json = json.dumps(dict_array)
+        if dict_array != self.last_send:  # Only send when lights have changed
+            self.last_send = dict_array
+            send_json = json.dumps(dict_array)
 
-        if self.client["id"] == 0:  # Debug
-            pass
-            # self.server.send_message_to_all(send_json)
-        else:
-            self.server.send_message(self.client, send_json)
+            if self.client["id"] == 0:  # Debug
+                pass
+                # self.server.send_message_to_all(send_json)
+            else:
+                self.server.send_message(self.client, send_json)
 
     def entry(self, entries):
         """
@@ -95,7 +96,8 @@ class Controller:
 
         for light in self.light_names:
             if light not in intersecting_lights and light not in phase:
-                phase.append(light)  # Light is not intersecting so it can be added to the phase
+                if light[0] != "A":  # Add no driving lane
+                    phase.append(light)  # Light is not intersecting so it can be added to the phase
 
         return phase
 
@@ -107,7 +109,7 @@ class Controller:
             - Is there a train inbound (switch to best phase without E1)
         :return: Key of best phase and score
         """
-        best_phase = ["A_WEST", 0]
+        best_phase = ["A_1", 0]
 
         for key in self.phases:
             phase = self.phases[key]
@@ -128,11 +130,11 @@ class Controller:
         difference = time.time() - light.last_green
         factor = round(difference / 20)
 
-        if name[0] == "D":  # Bus factor is higher
+        if name == "D1":  # Bus factor is higher
             factor *= 2
 
-        if name[0] == "E":
-            factor = -1000
+        if name == "E1":
+            factor = 1000
 
         return factor
 

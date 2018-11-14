@@ -4,11 +4,7 @@ import Phaser from 'phaser'
 export default class Trafic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type}) {
     super(game, x, y, asset)
-    this.game.physics.enable(this, Phaser.Physics.ARCADE)
-    this.body.enable = true
-    this.body.collideWorldBounds = false
-    this.body.checkCollision.up = false
-    this.body.checkCollision.down = false
+    this.game.physics.p2.enable(this)
 
     this.type = type
     this.trajectoryArrayPassed = []
