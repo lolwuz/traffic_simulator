@@ -91,6 +91,7 @@ export default class Game extends Phaser.State {
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     let newCar = new Trafic({
+    return new Trafic({
       game: this.game,
       x: trajectory[key][0].x,
       y: trajectory[key][0].y,
