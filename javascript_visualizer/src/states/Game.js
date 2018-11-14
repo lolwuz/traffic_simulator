@@ -3,12 +3,6 @@ import Phaser from 'phaser'
 import Trafic from '../sprites/Trafic'
 import trajectory from '../trajectory'
 
-let lights = [
-  {'light': 'A1', 'x': 100, 'y': 50},
-  {'light': 'A2', 'x': 300, 'y': 50, 'r': 230},
-  {'light': 'A3', 'x': 500, 'y': 50, 'r': 230}
-]
-
 export default class Game extends Phaser.State {
   /** Phaser State functions */
   preload () {
