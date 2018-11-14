@@ -2,13 +2,11 @@
 import Phaser from 'phaser'
 
 export default class Trafic extends Phaser.Sprite {
-  constructor ({game, x, y, asset, trajectoryArray, speed, type}) {
+  constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint}) {
     super(game, x, y, asset)
-    this.game.physics.enable(this, Phaser.Physics.ARCADE)
+    this.game.physics.p2.enable(this)
     this.body.enable = true
     this.body.collideWorldBounds = false
-    this.body.checkCollision.up = false
-    this.body.checkCollision.down = false
 
     this.type = type
     this.trajectoryArrayPassed = []
@@ -17,7 +15,7 @@ export default class Trafic extends Phaser.Sprite {
     this.stopped = false
     this.isColliding = false
     this.targetAngle = 0
-    this.anchor.set(0.5)
+    this.anchor.x = anchorPoint
     this.alpha = 0
   }
 
@@ -47,8 +45,17 @@ export default class Trafic extends Phaser.Sprite {
         let tx = traffic.x - this.x
         let ty = traffic.y - this.y
         let distance = Math.sqrt(tx * tx + ty * ty)
+        let compensation = 0
 
-        if (distance < 80 &&
+        if (traffic.type === 'truck') {
+          compensation = 20
+        }
+
+        if (this.type === 'truck') {
+          compensation = -20
+        }
+
+        if (distance < (this.width / 2 + traffic.width / 2 + 20 + compensation) &&
           traffic.trajectoryArrayPassed.length > this.trajectoryArrayPassed.length &&
           traffic.trajectoryArray === this.trajectoryArray) {
           return true
@@ -123,8 +130,8 @@ export default class Trafic extends Phaser.Sprite {
     let velocityX = (tx / distance) * this.speed
     let velocityY = (ty / distance) * this.speed
 
-    this.x += velocityX
-    this.y += velocityY
-    this.angle = angle
+    this.body.x += velocityX
+    this.body.y += velocityY
+    this.body.angle = angle
   }
 }
