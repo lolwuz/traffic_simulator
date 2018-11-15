@@ -67,7 +67,7 @@ export default class Game extends Phaser.State {
     let time = new Date().getTime()
     if (this.nextSpawn < time) {
       this.lastSpawn = time
-      // this.randomCar()
+      this.randomVehicle()
       this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (5000 - 500)) + 500
     }
 
