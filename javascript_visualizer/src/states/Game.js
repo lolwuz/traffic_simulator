@@ -21,11 +21,13 @@ export default class Game extends Phaser.State {
     this.lightGraphics = []
 
     this.regular_sprites = ['regular_car_1', 'regular_car_2', 'regular_car_3', 'regular_car_4', 'regular_car_5', 'regular_car_6', 'regular_car_7', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
+    this.van_sprites = ['van_1']
     this.motor_sprites = ['motor_1', 'motor_2', 'motor_3']
     this.bicycle_sprites = ['bicycle_1', 'bicycle_2']
     this.motorcycle_sprites = ['motorcycle_1']
     this.pedestrian_sprites = []
-    this.bus_sprites = []
+    this.bus_sprites = ['bus_1', 'train_1']
+    this.train_sprites = ['train_1']
     this.train_sprites = []
     this.truck_sprites = ['truck_1']
 
@@ -85,7 +87,7 @@ export default class Game extends Phaser.State {
   }
 
   randomVehicle () {
-    switch (Math.floor(Math.random() * 5)) {
+    switch (Math.floor(Math.random() * 7)) {
       case 0:
         // Regular car
         this.game.add.existing(this.randomCar())
@@ -106,11 +108,18 @@ export default class Game extends Phaser.State {
         // Truck
         this.game.add.existing(this.randomTruck())
         break
+      case 5:
+        // Bus
+        this.game.add.existing(this.randomBus())
+        break
+      case 6:
+        // Van
+        this.game.add.existing(this.randomVan())
     }
   }
 
   randomCar () {
-    let trajectories = Object.keys(trajectory)
+    let trajectories = Object.keys(trajectory).slice(0, 11 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Trafic({
@@ -126,7 +135,7 @@ export default class Game extends Phaser.State {
   }
 
   randomBicycle () {
-    let trajectories = Object.keys(trajectory) // TODO: Only bicycle/motorcycle trajectories
+    let trajectories = Object.keys(trajectory).slice(12, 17 + 1) // TODO: Only bicycle/motorcycle trajectories
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Trafic({
@@ -142,7 +151,7 @@ export default class Game extends Phaser.State {
   }
 
   randomMotorcycle () {
-    let trajectories = Object.keys(trajectory) // TODO: Only bicycle/motorcycle trajectories
+    let trajectories = Object.keys(trajectory).slice(12, 17 + 1) // TODO: Only bicycle/motorcycle trajectories
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Trafic({
@@ -158,7 +167,7 @@ export default class Game extends Phaser.State {
   }
 
   randomMotor () {
-    let trajectories = Object.keys(trajectory)
+    let trajectories = Object.keys(trajectory).slice(0, 11 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Trafic({
@@ -174,7 +183,7 @@ export default class Game extends Phaser.State {
   }
 
   randomTruck () {
-    let trajectories = Object.keys(trajectory)
+    let trajectories = Object.keys(trajectory).slice(0, 11 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Trafic({
@@ -186,6 +195,38 @@ export default class Game extends Phaser.State {
       speed: 4.1,
       type: 'truck',
       anchorPoint: 0.7
+    })
+  }
+
+  randomBus () {
+    let trajectories = Object.keys(trajectory).slice(0, 11 + 1) // .concat(Object.keys(trajectory).slice(x, x + 1))
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Trafic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.bus_sprites[Math.floor(Math.random() * this.bus_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 4.1,
+      type: 'bus',
+      anchorPoint: 0.7
+    })
+  }
+
+  randomVan () {
+    let trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Trafic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.van_sprites[Math.floor(Math.random() * this.van_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 4.1,
+      type: 'van',
+      anchorPoint: 0.6
     })
   }
 

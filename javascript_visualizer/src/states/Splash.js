@@ -33,6 +33,12 @@ export default class extends Phaser.State {
     this.load.image('bicycle_1', './assets/images/bicycles/bicycle_1.png')
     this.load.image('bicycle_2', './assets/images/bicycles/bicycle_2.png')
 
+    this.load.image('van_1', './assets/images/regular_traffic/van_1.png')
+
+    this.load.image('train_1', '.assets/images/trains/train_1.png')
+
+    this.load.image('bus_1', './assets/images/busses/bus_1.png')
+
     this.load.image('motorcycle_1', './assets/images/bicycles/motorcycle_1.png')
 
     this.load.image('truck_1', '/assets/images/regular_traffic/truck_1.png')
