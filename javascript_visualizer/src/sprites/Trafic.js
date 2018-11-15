@@ -4,9 +4,10 @@ import Phaser from 'phaser'
 export default class Trafic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint}) {
     super(game, x, y, asset)
-    this.game.physics.p2.enable(this)
+    this.game.physics.p2.enable(this, true)
     this.body.enable = true
-    this.body.collideWorldBounds = false
+    this.body.onBeginContact.add(this.contact, this)
+    this.body.motionState = 0
 
     this.type = type
     this.trajectoryArrayPassed = []
@@ -33,6 +34,10 @@ export default class Trafic extends Phaser.Sprite {
     }
 
     this.destroy()
+  }
+
+  contact (b, b2) {
+    console.log('contact')
   }
 
   checkCollision () {
@@ -82,9 +87,15 @@ export default class Trafic extends Phaser.Sprite {
   }
 
   isPointReached (point) {
+    let trafficWidth = (this.width / 2)
+    let frontX = trafficWidth * Math.cos(this.body.angle) + this.body.x
+    let frontY = trafficWidth * Math.sin(this.body.angle) + this.body.y
+
+
     let tx = point.x - this.x
     let ty = point.y - this.y
     let distance = Math.sqrt(tx * tx + ty * ty)
+
 
     return distance <= 10
   }
@@ -132,6 +143,7 @@ export default class Trafic extends Phaser.Sprite {
 
     this.body.x += velocityX
     this.body.y += velocityY
+
     this.body.angle = angle
   }
 }

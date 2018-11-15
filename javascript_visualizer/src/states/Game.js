@@ -32,6 +32,7 @@ export default class Game extends Phaser.State {
   create () {
     this.game.physics.startSystem(Phaser.Physics.P2JS)
     this.game.physics.p2.restitution = 0.9
+    this.game.physics.p2.setBoundsToWorld(false, false, false, false) // left=false, right=false, top=true, bottom=true
 
     this.roadMap = this.game.add.sprite(0, 0, 'road_map')
     this.game.world.setBounds(0, 0, this.roadMap.width, this.roadMap.height)
@@ -42,7 +43,7 @@ export default class Game extends Phaser.State {
     this.currentPoint.alpha = 0.5
 
     this.createLights()
-    this.randomCar()
+    this.randomVehicle()
   }
 
   update () {
@@ -60,10 +61,8 @@ export default class Game extends Phaser.State {
     let time = new Date().getTime()
     if (this.nextSpawn < time) {
       this.lastSpawn = time
-      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (400 - 100)) + 50
       // this.randomCar()
-      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 100
-      this.randomVehicle()
+      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (5000 - 500)) + 500
     }
 
     this.updateScale(pointer)
@@ -79,10 +78,7 @@ export default class Game extends Phaser.State {
 
   randomVehicle () {
     let rand = Math.floor(Math.random() * 10)
-    if (rand < 9)
-      this.game.add.existing(this.randomCar())
-    else //(rand === 5)
-      this.game.add.existing(this.randomTruck())
+    if (rand < 9) { this.game.add.existing(this.randomCar()) } else { this.game.add.existing(this.randomTruck()) }
   }
 
   randomCar () {
@@ -114,7 +110,7 @@ export default class Game extends Phaser.State {
       trajectoryArray: trajectory[key],
       speed: 4.1,
       type: 'truck',
-      anchorPoint: 0.7
+      anchorPoint: 0.5
     })
   }
 
