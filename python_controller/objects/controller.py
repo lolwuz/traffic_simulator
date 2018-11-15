@@ -64,6 +64,7 @@ class Controller:
         for name in entries:
             if name not in self.entries:
                 self.entries.append(name)
+                self.total_entries += 1
 
         for light in self.lights:
             if light.status == "green" and light.name in self.entries:
@@ -117,8 +118,8 @@ class Controller:
             for entry in self.entries:
                 if entry in phase:
                     waiting_factor = self.get_waiting_factor(entry)
-                    score += 1
-                    score += waiting_factor
+                    score += 10
+                    score += 10 ** waiting_factor
             if score > best_phase[1]:
                 best_phase = [key, score]
 
@@ -131,10 +132,10 @@ class Controller:
         factor = round(difference / 20)
 
         if name == "D1":  # Bus factor is higher
-            factor *= 2
+            factor = 4
 
         if name == "E1":
-            factor = 1000
+            factor = 10
 
         return factor
 
