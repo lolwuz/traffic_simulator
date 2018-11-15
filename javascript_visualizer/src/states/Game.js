@@ -20,8 +20,17 @@ export default class Game extends Phaser.State {
     this.lines = []
     this.lightGraphics = []
 
-    this.available_sprites = ['regular_car_1', 'regular_car_2', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
-    this.available_sprites.anchors = []
+    this.regular_sprites = ['regular_car_1', 'regular_car_2', 'regular_car_3', 'regular_car_4', 'regular_car_5', 'regular_car_6', 'regular_car_7', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
+    this.motor_sprites = ['motor_1', 'motor_2', 'motor_3']
+    this.bicycle_sprites = ['bicycle_1', 'bicycle_2']
+    this.motorcycle_sprites = ['motorcycle_1']
+    this.pedestrian_sprites = []
+    this.bus_sprites = []
+    this.train_sprites = []
+    this.truck_sprites = ['truck_1']
+
+    // this.available_sprites = ['regular_car_1', 'regular_car_2', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
+    // this.available_sprites.anchors = []
 
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
@@ -60,8 +69,6 @@ export default class Game extends Phaser.State {
     let time = new Date().getTime()
     if (this.nextSpawn < time) {
       this.lastSpawn = time
-      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (400 - 100)) + 50
-      // this.randomCar()
       this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 100
       this.randomVehicle()
     }
@@ -78,11 +85,28 @@ export default class Game extends Phaser.State {
   }
 
   randomVehicle () {
-    let rand = Math.floor(Math.random() * 10)
-    if (rand < 9)
-      this.game.add.existing(this.randomCar())
-    else //(rand === 5)
-      this.game.add.existing(this.randomTruck())
+    switch (Math.floor(Math.random() * 5)) {
+      case 0:
+        // Regular car
+        this.game.add.existing(this.randomCar())
+        break
+      case 1:
+        // Motor
+        this.game.add.existing(this.randomMotor())
+        break
+      case 2:
+        // Bicycle
+        this.game.add.existing(this.randomBicycle())
+        break
+      case 3:
+        // Motorcycle
+        this.game.add.existing(this.randomMotorcycle())
+        break
+      case 4:
+        // Truck
+        this.game.add.existing(this.randomTruck())
+        break
+    }
   }
 
   randomCar () {
@@ -93,11 +117,58 @@ export default class Game extends Phaser.State {
       game: this.game,
       x: trajectory[key][0].x,
       y: trajectory[key][0].y,
-      asset: this.available_sprites[Math.floor(Math.random() * this.available_sprites.length)],
-      // asset: 'top_car',
+      asset: this.regular_sprites[Math.floor(Math.random() * this.regular_sprites.length)],
       trajectoryArray: trajectory[key],
       speed: 4.1,
       type: 'car',
+      anchorPoint: 0.5
+    })
+  }
+
+  randomBicycle () {
+    let trajectories = Object.keys(trajectory) // TODO: Only bicycle/motorcycle trajectories
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Trafic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.bicycle_sprites[Math.floor(Math.random() * this.bicycle_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 4.1,
+      type: 'bicycle',
+      anchorPoint: 0.5
+    })
+  }
+
+  randomMotorcycle () {
+    let trajectories = Object.keys(trajectory) // TODO: Only bicycle/motorcycle trajectories
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Trafic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.motorcycle_sprites[Math.floor(Math.random() * this.motorcycle_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 4.1,
+      type: 'motorcycle',
+      anchorPoint: 0.5
+    })
+  }
+
+  randomMotor () {
+    let trajectories = Object.keys(trajectory)
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Trafic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.motor_sprites[Math.floor(Math.random() * this.motor_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 4.1,
+      type: 'motor',
       anchorPoint: 0.5
     })
   }
@@ -110,7 +181,7 @@ export default class Game extends Phaser.State {
       game: this.game,
       x: trajectory[key][0].x,
       y: trajectory[key][0].y,
-      asset: 'truck_1',
+      asset: this.truck_sprites[Math.floor(Math.random() * this.truck_sprites.length)],
       trajectoryArray: trajectory[key],
       speed: 4.1,
       type: 'truck',
