@@ -74,7 +74,7 @@ class Server:
                     entry_from_json = json.loads(message)
                 except:
                     print(message)
-                    print("Not of type JSON")
+                    self.server.send_message(client, "IKKE NIET SNAPPE DIKKE ERROR OEPSIE")
 
                 controller.entry(entry_from_json)
 

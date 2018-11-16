@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import {
-    Alert,
+    Alert, Badge,
     Card,
     CardBody,
     CardHeader,
@@ -17,7 +17,12 @@ class App extends Component {
         super(props);
 
         this.state = {
-            controllers: [],
+            controllers: [{
+                id: 1,
+                phase: 'west_1',
+                entries: ['A1', 'A2'],
+                lights: []
+            }],
             changes: []
         };
     }
@@ -63,19 +68,32 @@ class App extends Component {
     }
 
     render() {
-        let controllers = this.state.controllers.map(function(controller, i){
+        let controllers = this.state.controllers.map((controller, x) => {
+            let entries = controller.entries.map((entry, y) => {
+                return (
+                    <Badge key={y} color="info" style={{marginRight: 4}}>{ entry }</Badge>
+                );
+            });
+
+            let lights = controller.entries.map((light, e) => {
+                return (
+                    <Badge color="success" style={{marginRight: 4}}>Success</Badge>
+                );
+            });
+
             return (
-                <Card>
+                <Card key={x} style={{marginTop: 10}}>
                     <CardHeader>Controller: { controller.id }</CardHeader>
                     <CardBody>
                         <CardTitle>Current Phase { controller.phase }</CardTitle>
-                        <CardText>{ controller.entries }</CardText>
+                        <CardText>{ entries }</CardText>
+                        <cardTitle>{ lights }</cardTitle>
                     </CardBody>
                 </Card>
             );
         });
 
-        let changes = this.state.changes.map(function(controller, i){
+        let changes = this.state.changes.map(function(controller, i) {
             return (
                 <Alert key={i} color="success">
                     Controller: { controller.id } has connected

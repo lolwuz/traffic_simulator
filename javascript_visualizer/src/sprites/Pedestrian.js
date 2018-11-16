@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
-import Trafic from './Trafic'
+import Traffic from './Trafic'
 
-export default class Pedestrian extends Trafic {
+export default class Pedestrian extends Traffic {
 	constructor ({ game, x, y, asset, trajectory_array, speed }) {
 		super(game, x, y, asset, trajectory_array, speed)
 	}
