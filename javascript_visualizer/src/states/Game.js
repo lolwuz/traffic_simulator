@@ -15,6 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
+    this.easter_eggs_enabled = false
 
     this.points = []
     this.lines = []
@@ -29,6 +30,7 @@ export default class Game extends Phaser.State {
     this.bus_sprites = ['bus_1']
     this.train_sprites = ['train_1']
     this.truck_sprites = ['truck_1']
+    this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor', 'mariska']
 
     // this.available_sprites = ['regular_car_1', 'regular_car_2', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
     // this.available_sprites.anchors = []
@@ -85,7 +87,7 @@ export default class Game extends Phaser.State {
   }
 
   randomVehicle () {
-    switch (Math.floor(Math.random() * 8)) {
+    switch (Math.floor(Math.random() * 9)) {
       case 0:
         // Regular car
         this.game.add.existing(this.randomCar())
@@ -118,6 +120,11 @@ export default class Game extends Phaser.State {
         // Train
         this.game.add.existing(this.randomTrain())
         break
+      case 8:
+        // Easter egg
+        if (this.easter_eggs_enabled) {
+          this.game.add.existing(this.easter_egg())
+        }
     }
   }
 
@@ -139,7 +146,7 @@ export default class Game extends Phaser.State {
   }
 
   randomBicycle () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1) // TODO: Only bicycle/motorcycle trajectories
+    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -156,7 +163,7 @@ export default class Game extends Phaser.State {
   }
 
   randomMotorcycle () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1) // TODO: Only bicycle/motorcycle trajectories
+    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -252,6 +259,23 @@ export default class Game extends Phaser.State {
       trajectoryArray: trajectory[key],
       speed: 50,
       type: 'train',
+      anchorPoint: 0.5,
+      mass: 1000
+    })
+  }
+
+  easter_egg () {
+    let trajectories = Object.keys(trajectory)
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Traffic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.easter_egg_sprites[Math.floor(Math.random() * this.easter_egg_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 50,
+      type: 'easter_egg',
       anchorPoint: 0.5,
       mass: 1000
     })

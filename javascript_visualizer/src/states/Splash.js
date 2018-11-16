@@ -41,7 +41,15 @@ export default class extends Phaser.State {
 
     this.load.image('motorcycle_1', './assets/images/bicycles/motorcycle_1.png')
 
-    this.load.image('truck_1', '/assets/images/regular_traffic/truck_1.png')
+    this.load.image('truck_1', './assets/images/regular_traffic/truck_1.png')
+
+    // Easter eggs
+    this.load.image('david', './assets/images/easter_eggs/david.png')
+    this.load.image('wesket', './assets/images/easter_eggs/wesket.png')
+    this.load.image('bas', './assets/images/easter_eggs/bas.png')
+    this.load.image('victor', './assets/images/easter_eggs/victor.png')
+    // this.load.image('simon', './assets/images/easter_eggs/simon.png')
+    this.load.image('mariska', './assets/images/easter_eggs/mariska.png')
   }
 
   create () {
