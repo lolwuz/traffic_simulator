@@ -19,9 +19,10 @@ class Controller:
         self.entries = []
         self.lights = []
         self.phases = _PHASES
-        # Logging
+
         self.current_phase = ""
         self.total_entries = 0
+        self.mode = "normal"
 
         self.start()  # Set defaults for this controller
 
@@ -170,10 +171,25 @@ class Controller:
             else:
                 light.switch_status("red")
 
+    def initialize_mode(self):
+        phase = []
+        if self.mode == "chaos":
+            phase = self.light_names
+
+        for name in self.light_names:
+            light = self.get_light(name)
+            if name in phase:
+                light.switch_status("green")
+            else:
+                light.switch_status("red")
+
     def update(self):
         best_phase = self.get_best_phase()
 
-        self.initialize_phase(best_phase[0])
+        if self.mode == "normal":
+            self.initialize_phase(best_phase[0])
+        else:
+            self.initialize_mode()
 
         for light in self.lights:
             light.update()

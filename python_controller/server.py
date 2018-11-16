@@ -66,6 +66,17 @@ class Server:
 
     def on_message(self, client, server, message):
         """ Handles messages and json decoding """
+        if client["address"][0] == self._ADDRESS:
+            get = json.loads(message)
+            print(get)
+
+            for controller in self.controllers:
+                if controller.client["id"] == get["id"]:
+                    controller.mode = get["mode"]
+                    print(controller)
+
+            return
+
         for controller in self.controllers:
             if client["id"] == controller.client["id"]:
                 # Make a entry to a existing controller
@@ -73,7 +84,6 @@ class Server:
                 try:
                     entry_from_json = json.loads(message)
                 except:
-                    print(message)
                     self.server.send_message(client, "IKKE NIET SNAPPE DIKKE ERROR OEPSIE")
 
                 controller.entry(entry_from_json)
@@ -102,7 +112,8 @@ class Server:
                 "entries": controller.entries,
                 "total_entries": controller.total_entries,
                 "phase": controller.current_phase,
-                "lights": lights
+                "lights": lights,
+                "mode": controller.mode
             })
 
         send_json = json.dumps(info)
