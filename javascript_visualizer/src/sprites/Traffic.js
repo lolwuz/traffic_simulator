@@ -12,6 +12,7 @@ export default class Traffic extends Phaser.Sprite {
     this.body.motionState = 0
     this.body.damping = mass / 1000
     this.body.angularDamping = mass / 1000
+    this.body.mass = mass
 
     this.type = type
     this.trajectoryArrayPassed = []

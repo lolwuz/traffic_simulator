@@ -141,7 +141,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'car',
       anchorPoint: 0.5,
-      mass: 100
+      mass: 750
     })
   }
 
@@ -158,7 +158,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'bicycle',
       anchorPoint: 0.5,
-      mass: 10
+      mass: 500
     })
   }
 
@@ -175,7 +175,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'motorcycle',
       anchorPoint: 0.5,
-      mass: 40
+      mass: 700
     })
   }
 
@@ -192,7 +192,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'motor',
       anchorPoint: 0.5,
-      mass: 30
+      mass: 700
     })
   }
 
@@ -209,7 +209,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'truck',
       anchorPoint: 0.5,
-      mass: 350
+      mass: 950
     })
   }
 
@@ -226,7 +226,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'bus',
       anchorPoint: 0.5,
-      mass: 250
+      mass: 900
     })
   }
 
@@ -243,7 +243,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'van',
       anchorPoint: 0.5,
-      mass: 150
+      mass: 800
     })
   }
 
