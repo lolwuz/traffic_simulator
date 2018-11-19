@@ -50,9 +50,6 @@ export default class Traffic extends Phaser.Sprite {
   }
 
   contact (bodyB, shapeA, shapeB, contactEquations) {
-
-    console.log(shapeA)
-    console.log(shapeB)
     if (bodyB != null) {
       let bodyName = bodyB.sprite.getLightName()
       let thisName = this.getLightName()

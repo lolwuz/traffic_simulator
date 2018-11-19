@@ -1,16 +1,23 @@
 import React, {Component} from 'react';
 import './App.css';
 import {
-    Alert, Badge, Button,
+    Alert,
+    Badge, Button,
     Card,
-    CardBody, CardFooter,
-    CardHeader, CardLink,
-    CardText,
-    CardTitle,
-    Col,
-    Container,
-    Row
+    CardBody,
+    CardHeader,
+    Col, Collapse,
+    Container, DropdownItem,
+    DropdownMenu, DropdownToggle,
+    Jumbotron,
+    Nav,
+    Navbar,
+    NavbarBrand,
+    NavbarToggler,
+    NavItem,
+    Row, UncontrolledDropdown
 } from "reactstrap";
+import InfoModal from "./components/InfoModal";
 
 let test = {
     id: 1,
@@ -21,7 +28,11 @@ let test = {
         status: "red",
         timer: 0.0
     }],
-    mode: "normal"
+    mode: "normal",
+    client: {
+        ip: "217.19.25.11",
+        port: "1337"
+    }
 };
 
 class App extends Component {
@@ -29,15 +40,18 @@ class App extends Component {
         super(props);
 
         this.state = {
-            controllers: [test],
+            collapsed: false,
+            controllers: [test, test],
             changes: []
         };
 
-        this.onMode = this.onMode.bind(this)
+        this.toggleNavbar = this.toggleNavbar.bind(this);
+        this.onMode = this.onMode.bind(this);
+        this.allMode = this.allMode.bind(this);
     }
 
     componentDidMount() {
-        this.timer = setInterval(() => this.getControllers(), 100)
+        this.timer = setInterval(() => this.getControllers(), 100);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -45,18 +59,23 @@ class App extends Component {
             let isCurrent = false;
             for (let y = 0; y < prevState.controllers.length; y++) {
                 if (prevState.controllers[y].id === this.state.controllers[x].id) {
-                    isCurrent = true
-                }
+                    isCurrent = true;               }
             }
 
             if (!isCurrent) {
-                this.state.changes.unshift(this.state.controllers[x])
+                this.state.changes.unshift(this.state.controllers[x]);
             }
         }
 
         if (this.state.changes.length > 5) {
-            this.state.changes.pop()
+            this.state.changes.pop();
         }
+    }
+
+    toggleNavbar() {
+        this.setState({
+            collapsed: !this.state.collapsed
+        });
     }
 
     getControllers() {
@@ -74,7 +93,7 @@ class App extends Component {
             });
 
         }).catch((err) => {
-            console.log(err)
+            console.log(err);
         });
     }
 
@@ -89,15 +108,20 @@ class App extends Component {
         }).then(r => r.json()).then(r => {
             let controllers = JSON.parse(r);
         }).catch((err) => {
-            console.log(err)
+            console.log(err);
         });
     }
 
+    allMode(mode) {
+        for(let i = 0; i < this.state.controllers.length; i++) {
+            let controller = this.state.controllers[i];
+
+            this.onMode(controller, mode)
+        }
+     }
+
     onMode(controller, mode) {
-        let controllers = JSON.parse(JSON.stringify(this.state.controllers));
-
         controller.mode = mode;
-
         this.postMode(controller);
     }
 
@@ -174,9 +198,16 @@ class App extends Component {
             }
 
             return (
-                <Card inverse={inverse} color={color} key={x} style={{marginTop: 10}}>
-                    <CardHeader>
-                        <h5>Controller: {controller.id}</h5>
+                <Card inverse={inverse} color={color} key={x} style={{marginTop: 20}}>
+                    <CardHeader className="bg-info" >
+                        <Row>
+                            <Col>
+                                <h4 className="text-light">{controller.client.ip}:{controller.client.port}</h4>
+                            </Col>
+                            <Col>
+                                <InfoModal ip={controller.client.ip}/>
+                            </Col>
+                        </Row>
                     </CardHeader>
                     <CardBody>
                         <h6><b>Phase: </b>{controller.phase}</h6>
@@ -190,28 +221,69 @@ class App extends Component {
 
         let changes = this.state.changes.map(function (controller, i) {
             return (
-                <Alert key={i} color="success" style={{marginTop: 10}}>
+                <Alert key={i} color="success" style={{marginTop: 20}}>
                     Controller: {controller.id} has connected
                 </Alert>
             );
         });
 
+        if (this.state.controllers.length < 1) {
+            return (
+                <div>
+                    <Jumbotron>
+                        <h1 className="display-3">No simulations connected</h1>
+                        <p className="lead">The controller at this location is currently not controlling any traffic simulations</p>
+                        <hr className="my-2" />
+                        <p>You can open a new simulation by pressing the button below</p>
+                        <p className="lead">
+                            <Button color="primary">Open a new simulation</Button>
+                        </p>
+                    </Jumbotron>
+                </div>
+            )
+        }
+
         return (
             <div>
-                <Container>
+                <Navbar color="info" expand="md">
+                    <NavbarBrand href="/" className="mr-auto text-light">TRAFFIC CONTROLLER</NavbarBrand>
+                    <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+                    <Collapse isOpen={this.state.collapsed} navbar>
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <Button size="xl" className="btn-outline-light" onClick={() => this.allMode("chaos")}>Full chaos</Button>
+                            </NavItem>
+                            <NavItem style={{marginLeft: 10}}>
+                                <Button className="btn-outline-light" onClick={() => this.allMode("off")}>All off</Button>
+                            </NavItem>
+
+                            <UncontrolledDropdown nav inNavbar>
+                                <DropdownToggle className="text-light" nav caret>
+                                    Status
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem>
+                                        { this.state.controllers.length } controller(s) connected
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        {  }
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem>
+                                        Reset
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                        </Nav>
+                    </Collapse>
+                </Navbar>
+
+                <Container fluid>
                     <Row>
                         <Col md={6}>
                             {controllers}
                         </Col>
                         <Col md={6}>
-                            <Card style={{marginTop: 10}}>
-                                <CardHeader>
-                                    <h5>Status</h5>
-                                </CardHeader>
-                                <CardBody>
-                                    <h6>Controllers: { this.state.controllers.length }</h6>
-                                </CardBody>
-                            </Card>
                             {changes}
                         </Col>
                     </Row>
