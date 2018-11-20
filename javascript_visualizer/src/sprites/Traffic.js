@@ -1,6 +1,7 @@
 /* globals serverData, socket */
 import Phaser from 'phaser'
 import intersects from '../intersects.json'
+import trajectory from '../trajectory'
 
 export default class Traffic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass}) {
@@ -12,7 +13,7 @@ export default class Traffic extends Phaser.Sprite {
     this.body.motionState = 0
     this.body.damping = mass / 1000
     this.body.angularDamping = mass / 1000
-
+    this.body.mass = mass
     this.type = type
     this.trajectoryArrayPassed = []
     this.trajectoryArray = trajectoryArray
@@ -38,7 +39,6 @@ export default class Traffic extends Phaser.Sprite {
 
     for (let i = 0; i < this.trajectoryArray.length; i++) {
       let point = this.trajectoryArray[i]
-
       if (this.trajectoryArrayPassed.indexOf(i) === -1) {
         this.moveToPoint(point, i)
         return
@@ -49,9 +49,6 @@ export default class Traffic extends Phaser.Sprite {
   }
 
   contact (bodyB, shapeA, shapeB, contactEquations) {
-
-    console.log(shapeA)
-    console.log(shapeB)
     if (bodyB != null) {
       let bodyName = bodyB.sprite.getLightName()
       let thisName = this.getLightName()
