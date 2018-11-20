@@ -1,6 +1,7 @@
 /* globals serverData, socket */
 import Phaser from 'phaser'
 import intersects from '../intersects.json'
+import trajectory from '../trajectory'
 
 export default class Traffic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, group}) {
@@ -40,7 +41,6 @@ export default class Traffic extends Phaser.Sprite {
 
     for (let i = 0; i < this.trajectoryArray.length; i++) {
       let point = this.trajectoryArray[i]
-
       if (this.trajectoryArrayPassed.indexOf(i) === -1) {
         this.moveToPoint(point, i)
         return

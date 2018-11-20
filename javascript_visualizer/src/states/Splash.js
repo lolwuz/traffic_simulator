@@ -43,6 +43,8 @@ export default class extends Phaser.State {
 
     this.load.image('truck_1', './assets/images/regular_traffic/truck_1.png')
 
+    this.load.spritesheet('pedestrian_1', './assets/images/pedestrians/pedestrian_1.png', 11, 11, 2)
+
     // Easter eggs
     this.load.image('david', './assets/images/easter_eggs/david.png')
     this.load.image('wesket', './assets/images/easter_eggs/wesket.png')
