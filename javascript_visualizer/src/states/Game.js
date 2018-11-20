@@ -15,7 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
-    this.easter_eggs_enabled = true
+    this.easter_eggs_enabled = false
 
     this.points = []
     this.lines = []
@@ -318,9 +318,6 @@ export default class Game extends Phaser.State {
     }
 
     if (ASix && (counterCars + counterASix) <= 5) {
-      console.log(trajectIndex)
-      console.log(counterCars)
-      console.log(counterASix)
       return true
     } else if (!ASix && counterCars < 5) {
       return true
@@ -328,7 +325,7 @@ export default class Game extends Phaser.State {
       return false
     }
   }
-  easter_egg () {
+  easterEgg () {
     let trajectories = Object.keys(trajectory)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
