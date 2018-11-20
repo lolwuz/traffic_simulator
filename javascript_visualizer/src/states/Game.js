@@ -26,7 +26,7 @@ export default class Game extends Phaser.State {
     this.motor_sprites = ['motor_1', 'motor_2', 'motor_3']
     this.bicycle_sprites = ['bicycle_1', 'bicycle_2']
     this.motorcycle_sprites = ['motorcycle_1']
-    this.pedestrian_sprites = []
+    this.pedestrian_sprites = ['pedestrian_1']
     this.bus_sprites = ['bus_1']
     this.train_sprites = ['train_1']
     this.truck_sprites = ['truck_1']
@@ -145,9 +145,16 @@ export default class Game extends Phaser.State {
         this.game.add.existing(this.randomTrain())
         break
       case 8:
+        // Pedestrian
+        let pedestrian = this.randomPedestrian()
+        pedestrian.animations.add('walk')
+        pedestrian.animations.play('walk', 55, true)
+        this.game.add.existing(pedestrian)
+        break
+      case 9:
         // Easter egg
         if (this.easter_eggs_enabled) {
-          this.game.add.existing(this.easter_egg())
+          this.game.add.existing(this.easterEgg())
         }
     }
   }
@@ -180,6 +187,23 @@ export default class Game extends Phaser.State {
       type: 'bicycle',
       anchorPoint: 0.5,
       mass: 500
+    })
+  }
+
+  randomPedestrian () {
+    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Traffic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 25,
+      type: 'pedestrian',
+      anchorPoint: 0.5,
+      mass: 300
     })
   }
 
@@ -325,6 +349,7 @@ export default class Game extends Phaser.State {
       return false
     }
   }
+
   easterEgg () {
     let trajectories = Object.keys(trajectory)
     let key = trajectories[trajectories.length * Math.random() << 0]
