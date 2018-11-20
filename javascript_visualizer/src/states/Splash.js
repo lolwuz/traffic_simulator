@@ -50,6 +50,11 @@ export default class extends Phaser.State {
     this.load.image('victor', './assets/images/easter_eggs/victor.png')
     // this.load.image('simon', './assets/images/easter_eggs/simon.png')
     this.load.image('mariska', './assets/images/easter_eggs/mariska.png')
+    // Particles
+    this.game.load.image('fire1', 'assets/images/fire1.png')
+    this.game.load.image('fire2', 'assets/images/fire2.png')
+    this.game.load.image('fire3', 'assets/images/fire3.png')
+    this.game.load.image('smoke', 'assets/images/smoke-puff.png')
   }
 
   create () {

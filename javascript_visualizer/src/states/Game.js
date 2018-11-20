@@ -49,9 +49,12 @@ export default class Game extends Phaser.State {
     this.game.world.setBounds(0, 0, this.roadMap.width, this.roadMap.height)
     this.game.camera.focusOnXY(this.roadMap.width / 2, this.roadMap.height / 2)
 
+
     this.currentPoint = this.game.add.image(0, 0, 'centroid')
     this.currentPoint.anchor.set(0.5)
     this.currentPoint.alpha = 0.5
+
+    this.trafficGroup = this.physics.p2.createCollisionGroup()
 
     this.createLights()
   }
@@ -141,7 +144,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'car',
       anchorPoint: 0.5,
-      mass: 750
+      mass: 750,
+      group: this.trafficGroup
     })
   }
 
@@ -158,7 +162,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'bicycle',
       anchorPoint: 0.5,
-      mass: 500
+      mass: 500,
+      group: this.trafficGroup
     })
   }
 
@@ -175,7 +180,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'motorcycle',
       anchorPoint: 0.5,
-      mass: 700
+      mass: 700,
+      group: this.trafficGroup
     })
   }
 
@@ -192,7 +198,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'motor',
       anchorPoint: 0.5,
-      mass: 700
+      mass: 700,
+      group: this.trafficGroup
     })
   }
 
@@ -209,7 +216,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'truck',
       anchorPoint: 0.5,
-      mass: 950
+      mass: 950,
+      group: this.trafficGroup
     })
   }
 
@@ -226,7 +234,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'bus',
       anchorPoint: 0.5,
-      mass: 900
+      mass: 900,
+      group: this.trafficGroup
     })
   }
 
@@ -243,7 +252,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'van',
       anchorPoint: 0.5,
-      mass: 800
+      mass: 800,
+      group: this.trafficGroup
     })
   }
 
@@ -260,7 +270,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'train',
       anchorPoint: 0.5,
-      mass: 1000
+      mass: 1000,
+      group: this.trafficGroup
     })
   }
 
@@ -277,7 +288,8 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'easter_egg',
       anchorPoint: 0.5,
-      mass: 1000
+      mass: 1000,
+      group: this.trafficGroup
     })
   }
 
