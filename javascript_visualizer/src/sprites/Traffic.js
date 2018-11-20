@@ -4,9 +4,11 @@ import intersects from '../intersects.json'
 import trajectory from '../trajectory'
 
 export default class Traffic extends Phaser.Sprite {
-  constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass}) {
+  constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, group}) {
     super(game, x, y, asset)
     this.game.physics.p2.enable(this, false)
+
+    this.body.setRectangle(this.width - 4, this.height - 4)
     this.body.enable = true
     this.body.onBeginContact.add(this.contact, this)
     this.body.onEndContact.add(this.endContact, this)
@@ -34,9 +36,8 @@ export default class Traffic extends Phaser.Sprite {
       return
     }
 
-    this.body.angularVelocity = 0
     this.updateFade()
-    this.checkCollision()
+    this.isClose = this.isCloseTo()
 
     for (let i = 0; i < this.trajectoryArray.length; i++) {
       let point = this.trajectoryArray[i]
@@ -47,6 +48,25 @@ export default class Traffic extends Phaser.Sprite {
     }
 
     this.destroy()
+  }
+
+  isCloseTo () {
+    let children = this.game.world.children
+    for (let x = 0; x < children.length; x++) {
+      let traffic = children[x]
+      if (traffic.constructor === Traffic && traffic !== this) {
+        let tx = traffic.x - this.x
+        let ty = traffic.y - this.y
+        let distance = Math.sqrt(tx * tx + ty * ty)
+        if (distance < (this.width / 2 + traffic.width / 2) + 20) {
+          if (traffic.trajectoryArrayPassed.length > this.trajectoryArrayPassed.length &&
+            this.trajectoryArray === traffic.trajectoryArray && !traffic.isColliding) {
+            return true
+          }
+        }
+      }
+    }
+    return false
   }
 
   contact (bodyB, shapeA, shapeB, contactEquations) {
@@ -65,33 +85,17 @@ export default class Traffic extends Phaser.Sprite {
 
         this.lifespan = 3000
         bodyB.sprite.lifespan = 3000
-      } else {
-        if (bodyB.sprite.trajectoryArrayPassed.length > this.trajectoryArrayPassed.length && this.trajectoryArray === bodyB.sprite.trajectoryArray) {
-          this.isClose = true
-        }
       }
     }
+  }
+
+  onKilled () {
+    console.log('IM KILLED')
+    this.emitter.destroy()
   }
 
   endContact () {
     this.isClose = false
-  }
-
-  checkCollision () {
-    /* let children = this.game.world.children
-    for (let x = 0; x < children.length; x++) {
-      let traffic = children[x]
-      if (traffic.constructor === Traffic && traffic !== this) {
-        let tx = traffic.x - this.x
-        let ty = traffic.y - this.y
-        let distance = Math.sqrt(tx * tx + ty * ty)
-
-        if (distance < (this.width / 2 + traffic.width / 2) + 20) {
-          this.isClose = true
-        }
-      }
-    }
-    this.isClose = false */
   }
 
   updateFade () {
@@ -111,10 +115,6 @@ export default class Traffic extends Phaser.Sprite {
   }
 
   isPointReached (point) {
-    let trafficWidth = (this.width / 2)
-    let frontX = trafficWidth * Math.cos(this.body.angle) + this.body.x
-    let frontY = trafficWidth * Math.sin(this.body.angle) + this.body.y
-
     let tx = point.x - this.x
     let ty = point.y - this.y
     let distance = Math.sqrt(tx * tx + ty * ty)

@@ -29,10 +29,7 @@ let test = {
         timer: 0.0
     }],
     mode: "normal",
-    client: {
-        ip: "217.19.25.11",
-        port: "1337"
-    }
+    client: ["141.252.234.218", "1337"]
 };
 
 class App extends Component {
@@ -41,7 +38,7 @@ class App extends Component {
 
         this.state = {
             collapsed: false,
-            controllers: [test, test],
+            controllers: [],
             changes: []
         };
 
@@ -202,10 +199,10 @@ class App extends Component {
                     <CardHeader className="bg-info" >
                         <Row>
                             <Col>
-                                <h4 className="text-light">{controller.client.ip}:{controller.client.port}</h4>
+                                <h4 className="text-light">{controller.client[0]}:{controller.client[1]}</h4>
                             </Col>
                             <Col>
-                                <InfoModal ip={controller.client.ip}/>
+                                <InfoModal controller={controller}/>
                             </Col>
                         </Row>
                     </CardHeader>
@@ -246,7 +243,7 @@ class App extends Component {
         return (
             <div>
                 <Navbar color="info" expand="md">
-                    <NavbarBrand href="/" className="mr-auto text-light">TRAFFIC CONTROLLER</NavbarBrand>
+                    <NavbarBrand href="/" className="mr-auto text-light"><b>TRAFFIC CONTROLLER</b></NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                     <Collapse isOpen={this.state.collapsed} navbar>
                         <Nav className="ml-auto" navbar>
@@ -257,16 +254,13 @@ class App extends Component {
                                 <Button className="btn-outline-light" onClick={() => this.allMode("off")}>All off</Button>
                             </NavItem>
 
-                            <UncontrolledDropdown nav inNavbar>
+                            <UncontrolledDropdown style={{marginLeft: 10}} nav inNavbar>
                                 <DropdownToggle className="text-light" nav caret>
                                     Status
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem>
                                         { this.state.controllers.length } controller(s) connected
-                                    </DropdownItem>
-                                    <DropdownItem>
-                                        {  }
                                     </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem>
