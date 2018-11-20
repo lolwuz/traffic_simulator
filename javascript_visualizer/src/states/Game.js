@@ -327,6 +327,7 @@ export default class Game extends Phaser.State {
     } else {
       return false
     }
+  }
   easter_egg () {
     let trajectories = Object.keys(trajectory)
     let key = trajectories[trajectories.length * Math.random() << 0]
