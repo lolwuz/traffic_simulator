@@ -6,7 +6,7 @@ from websocket_server import WebsocketServer
 import json
 import pandas
 import time
-import requests
+import mysql.connector as mariadb
 
 try:
     import thread as thread  # For ubuntu thread
@@ -25,6 +25,9 @@ class Server:
         self.server.set_fn_message_received(self.on_message)
         self.is_info_server = False
         self.info_client = None
+
+        self.maria_db_connection = mariadb.connect(user='root', password='lolwuz', database='controllers')
+        self.cursor = self.maria_db_connection.cursor()
 
         self.on_open()
 
@@ -66,6 +69,17 @@ class Server:
 
     def on_message(self, client, server, message):
         """ Handles messages and json decoding """
+        if client["address"][0] == self._ADDRESS:
+            get = json.loads(message)
+            print(get)
+
+            for controller in self.controllers:
+                if controller.client["id"] == get["id"]:
+                    controller.mode = get["mode"]
+                    print(controller)
+
+            return
+
         for controller in self.controllers:
             if client["id"] == controller.client["id"]:
                 # Make a entry to a existing controller
@@ -73,7 +87,6 @@ class Server:
                 try:
                     entry_from_json = json.loads(message)
                 except:
-                    print(message)
                     self.server.send_message(client, "IKKE NIET SNAPPE DIKKE ERROR OEPSIE")
 
                 controller.entry(entry_from_json)
@@ -102,12 +115,17 @@ class Server:
                 "entries": controller.entries,
                 "total_entries": controller.total_entries,
                 "phase": controller.current_phase,
-                "lights": lights
+                "lights": lights,
+                "mode": controller.mode,
+                "client": controller.client
             })
 
         send_json = json.dumps(info)
 
         self.server.send_message(self.info_client, send_json)
+        """ Database """
+
+        self.cursor.execute("SELECT * FROM controllers")
 
     def on_open(self):
         thread.start_new_thread(self.update, ())

@@ -15,6 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
+    this.easter_eggs_enabled = true
 
     this.points = []
     this.lines = []
@@ -29,6 +30,7 @@ export default class Game extends Phaser.State {
     this.bus_sprites = ['bus_1']
     this.train_sprites = ['train_1']
     this.truck_sprites = ['truck_1']
+    this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor', 'mariska']
 
     // this.available_sprites = ['regular_car_1', 'regular_car_2', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
     // this.available_sprites.anchors = []
@@ -84,7 +86,7 @@ export default class Game extends Phaser.State {
   }
 
   randomVehicle () {
-    switch (Math.floor(Math.random() * 8)) {
+    switch (Math.floor(Math.random() * 9)) {
       case 0:
         // Regular car
         let trajectories = Object.keys(trajectory).slice(0, 11 + 1)
@@ -142,6 +144,11 @@ export default class Game extends Phaser.State {
         // Train
         this.game.add.existing(this.randomTrain())
         break
+      case 8:
+        // Easter egg
+        if (this.easter_eggs_enabled) {
+          this.game.add.existing(this.easter_egg())
+        }
     }
   }
 
@@ -155,7 +162,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'car',
       anchorPoint: 0.5,
-      mass: 100
+      mass: 750
     })
   }
 
@@ -172,7 +179,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'bicycle',
       anchorPoint: 0.5,
-      mass: 10
+      mass: 500
     })
   }
 
@@ -189,7 +196,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'motorcycle',
       anchorPoint: 0.5,
-      mass: 40
+      mass: 700
     })
   }
 
@@ -203,7 +210,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'motor',
       anchorPoint: 0.5,
-      mass: 30
+      mass: 700
     })
   }
 
@@ -217,7 +224,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'truck',
       anchorPoint: 0.5,
-      mass: 350
+      mass: 950
     })
   }
 
@@ -231,7 +238,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'bus',
       anchorPoint: 0.5,
-      mass: 250
+      mass: 900
     })
   }
 
@@ -245,7 +252,7 @@ export default class Game extends Phaser.State {
       speed: 50,
       type: 'van',
       anchorPoint: 0.5,
-      mass: 150
+      mass: 800
     })
   }
 
@@ -320,6 +327,21 @@ export default class Game extends Phaser.State {
     } else {
       return false
     }
+  easter_egg () {
+    let trajectories = Object.keys(trajectory)
+    let key = trajectories[trajectories.length * Math.random() << 0]
+
+    return new Traffic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: this.easter_egg_sprites[Math.floor(Math.random() * this.easter_egg_sprites.length)],
+      trajectoryArray: trajectory[key],
+      speed: 50,
+      type: 'easter_egg',
+      anchorPoint: 0.5,
+      mass: 1000
+    })
   }
 
   createLights () {

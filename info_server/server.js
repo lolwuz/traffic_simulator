@@ -22,11 +22,18 @@ client.onmessage = function(e) {
     data = e.data;
 };
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/info', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(data));
+});
+
+app.post('/mode', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    console.log(req.body);      // your JSON
+    client.send(JSON.stringify(req.body));
+    res.send(req.body);
 });
 
 app.listen(3001, () =>
