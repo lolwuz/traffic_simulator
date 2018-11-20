@@ -6,7 +6,7 @@ import trajectory from '../trajectory'
 export default class Traffic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, group}) {
     super(game, x, y, asset)
-    this.game.physics.p2.enable(this, false)
+    this.game.physics.p2.enable(this, true)
 
     this.body.setRectangle(this.width - 4, this.height - 4)
     this.body.enable = true
