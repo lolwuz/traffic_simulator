@@ -11,7 +11,6 @@ export default class Traffic extends Phaser.Sprite {
     this.body.setRectangle(this.width - 4, this.height - 4)
     this.body.enable = true
     this.body.onBeginContact.add(this.contact, this)
-    this.body.onEndContact.add(this.endContact, this)
     this.body.motionState = 0
     this.body.damping = mass / 1000
     this.body.angularDamping = mass / 1000
@@ -48,6 +47,14 @@ export default class Traffic extends Phaser.Sprite {
     }
 
     this.destroy()
+  }
+
+  updateFade () {
+    if (this.alpha < 1.00) {
+      this.alpha += 0.01
+    } else {
+      this.alpha = 1
+    }
   }
 
   isCloseTo () {
@@ -94,26 +101,6 @@ export default class Traffic extends Phaser.Sprite {
     this.emitter.destroy()
   }
 
-  endContact () {
-    this.isClose = false
-  }
-
-  updateFade () {
-    if (this.alpha < 1.00) {
-      this.alpha += 0.01
-    } else {
-      this.alpha = 1
-    }
-  }
-
-  updateAngle () {
-    if (this.targetAngle > this.angle) {
-      this.angle += 2
-    } else {
-      this.angle -= 2
-    }
-  }
-
   isPointReached (point) {
     let tx = point.x - this.x
     let ty = point.y - this.y
@@ -153,14 +140,6 @@ export default class Traffic extends Phaser.Sprite {
     }
   }
 
-  setAngle () {
-    let tx = this.trajectoryArray[1].x - this.trajectoryArray[0].x
-    let ty = this.trajectoryArray[1].y - this.trajectoryArray[0].y
-    let rad = Math.atan2(ty, tx)
-    let angle = rad / Math.PI * 180
-    this.body.angle = angle
-  }
-
   move (point) {
     let tx = point.x - this.x
     let ty = point.y - this.y
@@ -176,6 +155,10 @@ export default class Traffic extends Phaser.Sprite {
       this.body.velocity.x = velocityX * 4
       this.body.velocity.y = velocityY * 4
     }
+  }
+
+  angleBetween (angle) {
+    return Math.abs(this.body.angle - angle)
   }
 
   getLightName () {

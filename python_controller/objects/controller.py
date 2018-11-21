@@ -5,13 +5,12 @@ import json
 
 
 class Controller:
-    def __init__(self, server, client, traffic_lights, intersections):
+    def __init__(self, client, traffic_lights, intersections):
         """
         Controller
         :param traffic_lights: list of traffic_light names
         :param intersections: 2d numpy array of intersections
         """
-        self.server = server
         self.client = client
         self.last_send = dict()
         self.light_names = traffic_lights
@@ -51,11 +50,7 @@ class Controller:
             self.last_send = dict_array
             send_json = json.dumps(dict_array)
 
-            if self.client["id"] == 0:  # Debug
-                pass
-                # self.server.send_message_to_all(send_json)
-            else:
-                self.server.send_message(self.client, send_json)
+            self.client.sendMessage(send_json)
 
     def entry(self, entries):
         """

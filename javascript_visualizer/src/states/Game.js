@@ -151,7 +151,7 @@ export default class Game extends Phaser.State {
         // Pedestrian
         let pedestrian = this.randomPedestrian()
         pedestrian.animations.add('walk')
-        pedestrian.animations.play('walk', 55, true)
+        pedestrian.animations.play('walk', 20, true)
         this.game.add.existing(pedestrian)
         break
       case 9:

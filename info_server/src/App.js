@@ -20,7 +20,6 @@ import {
 import InfoModal from "./components/InfoModal";
 
 let test = {
-    id: 1,
     phase: 'west_1',
     entries: ['A1', 'A2'],
     lights: [{
