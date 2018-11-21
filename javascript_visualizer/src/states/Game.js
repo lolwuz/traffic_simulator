@@ -38,6 +38,7 @@ export default class Game extends Phaser.State {
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
     // this.debugPoints()
+    this.debugPoints()
   }
 
   create () {
@@ -47,11 +48,6 @@ export default class Game extends Phaser.State {
     this.roadMap = this.game.add.sprite(0, 0, 'road_map')
     this.game.world.setBounds(0, 0, this.roadMap.width, this.roadMap.height)
     this.game.camera.focusOnXY(this.roadMap.width / 2, this.roadMap.height / 2)
-
-
-    this.currentPoint = this.game.add.image(0, 0, 'centroid')
-    this.currentPoint.anchor.set(0.5)
-    this.currentPoint.alpha = 0.5
 
     this.trafficGroup = this.physics.p2.createCollisionGroup()
 
@@ -70,12 +66,6 @@ export default class Game extends Phaser.State {
     }
 
     // Random spawn objects
-    let time = new Date().getTime()
-    if (this.nextSpawn < time) {
-      this.lastSpawn = time
-      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 500
-      this.randomVehicle()
-    }
 
     this.updateScale(pointer)
     this.updatePosition(pointer)
@@ -151,7 +141,7 @@ export default class Game extends Phaser.State {
         // Pedestrian
         let pedestrian = this.randomPedestrian()
         pedestrian.animations.add('walk')
-        pedestrian.animations.play('walk', 55, true)
+        pedestrian.animations.play('walk', 5, true)
         this.game.add.existing(pedestrian)
         break
       case 9:
@@ -450,8 +440,8 @@ export default class Game extends Phaser.State {
   }
 
   homePressed () {
-    for (let i = 0; i < trajectory.carSouthEast1.length; i++) {
-      let newPoint = new Phaser.Point(trajectory.carSouthEast1[i].x, trajectory.carSouthEast1[i].y)
+    for (let i = 0; i < trajectory.pedestrianWestNorth.length; i++) {
+      let newPoint = new Phaser.Point(trajectory.pedestrianWestNorth[i].x, trajectory.pedestrianWestNorth[i].y)
       this.points.push(newPoint)
     }
     console.log(this.lines)
