@@ -32,12 +32,8 @@ export default class Game extends Phaser.State {
     this.truck_sprites = ['truck_1']
     this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor', 'mariska']
 
-    // this.available_sprites = ['regular_car_1', 'regular_car_2', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
-    // this.available_sprites.anchors = []
-
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
-    // this.debugPoints()
     this.debugPoints()
   }
 
@@ -66,6 +62,12 @@ export default class Game extends Phaser.State {
     }
 
     // Random spawn objects
+    let time = new Date().getTime()
+    if (this.nextSpawn < time) {
+      this.lastSpawn = time
+      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 500
+      // this.randomVehicle()
+    }
 
     this.updateScale(pointer)
     this.updatePosition(pointer)
