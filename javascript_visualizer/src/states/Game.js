@@ -15,7 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
-    this.easter_eggs_enabled = false
+    this.easter_eggs_enabled = true
 
     this.points = []
     this.lines = []
@@ -186,7 +186,7 @@ export default class Game extends Phaser.State {
   }
 
   randomPedestrian () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+    let trajectories = Object.keys(trajectory).slice(20, 21 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -195,7 +195,7 @@ export default class Game extends Phaser.State {
       y: trajectory[key][0].y,
       asset: this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)],
       trajectoryArray: trajectory[key],
-      speed: 25,
+      speed: 10,
       type: 'pedestrian',
       anchorPoint: 0.5,
       mass: 300
