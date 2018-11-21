@@ -34,7 +34,7 @@ export default class Game extends Phaser.State {
 
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
-    this.debugPoints()
+    // this.debugPoints()
   }
 
   create () {
@@ -66,7 +66,7 @@ export default class Game extends Phaser.State {
     if (this.nextSpawn < time) {
       this.lastSpawn = time
       this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 500
-      // this.randomVehicle()
+      this.randomVehicle()
     }
 
     this.updateScale(pointer)
@@ -188,7 +188,7 @@ export default class Game extends Phaser.State {
   }
 
   randomPedestrian () {
-    let trajectories = Object.keys(trajectory).slice(20, 21 + 1)
+    let trajectories = Object.keys(trajectory).slice(20, 25 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
