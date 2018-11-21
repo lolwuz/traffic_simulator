@@ -15,7 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
-    this.easter_eggs_enabled = false
+    this.easter_eggs_enabled = true
 
     this.points = []
     this.lines = []
@@ -32,9 +32,6 @@ export default class Game extends Phaser.State {
     this.truck_sprites = ['truck_1']
     this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor', 'mariska']
 
-    // this.available_sprites = ['regular_car_1', 'regular_car_2', 'race_car_1', 'race_car_2', 'race_car_3', 'race_car_4', 'race_car_5']
-    // this.available_sprites.anchors = []
-
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
     // this.debugPoints()
@@ -47,11 +44,6 @@ export default class Game extends Phaser.State {
     this.roadMap = this.game.add.sprite(0, 0, 'road_map')
     this.game.world.setBounds(0, 0, this.roadMap.width, this.roadMap.height)
     this.game.camera.focusOnXY(this.roadMap.width / 2, this.roadMap.height / 2)
-
-
-    this.currentPoint = this.game.add.image(0, 0, 'centroid')
-    this.currentPoint.anchor.set(0.5)
-    this.currentPoint.alpha = 0.5
 
     this.trafficGroup = this.physics.p2.createCollisionGroup()
 
@@ -196,7 +188,7 @@ export default class Game extends Phaser.State {
   }
 
   randomPedestrian () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+    let trajectories = Object.keys(trajectory).slice(20, 25 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -205,7 +197,7 @@ export default class Game extends Phaser.State {
       y: trajectory[key][0].y,
       asset: this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)],
       trajectoryArray: trajectory[key],
-      speed: 25,
+      speed: 10,
       type: 'pedestrian',
       anchorPoint: 0.5,
       mass: 300
@@ -450,8 +442,8 @@ export default class Game extends Phaser.State {
   }
 
   homePressed () {
-    for (let i = 0; i < trajectory.carSouthEast1.length; i++) {
-      let newPoint = new Phaser.Point(trajectory.carSouthEast1[i].x, trajectory.carSouthEast1[i].y)
+    for (let i = 0; i < trajectory.pedestrianWestNorth.length; i++) {
+      let newPoint = new Phaser.Point(trajectory.pedestrianWestNorth[i].x, trajectory.pedestrianWestNorth[i].y)
       this.points.push(newPoint)
     }
     console.log(this.lines)
