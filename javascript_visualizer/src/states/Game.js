@@ -34,7 +34,7 @@ export default class Game extends Phaser.State {
 
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
-    // this.debugPoints()
+    //this.debugPoints()
   }
 
   create () {
@@ -170,7 +170,7 @@ export default class Game extends Phaser.State {
   }
 
   randomBicycle () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+    let trajectories = Object.keys(trajectory).slice(12, 18 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -188,7 +188,7 @@ export default class Game extends Phaser.State {
   }
 
   randomPedestrian () {
-    let trajectories = Object.keys(trajectory).slice(20, 25 + 1)
+    let trajectories = Object.keys(trajectory).slice(21, 26 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -205,7 +205,7 @@ export default class Game extends Phaser.State {
   }
 
   randomMotorcycle () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+    let trajectories = Object.keys(trajectory).slice(12, 18 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -283,7 +283,7 @@ export default class Game extends Phaser.State {
   }
 
   randomTrain () {
-    let trajectories = Object.keys(trajectory).slice(18, 19 + 1)
+    let trajectories = Object.keys(trajectory).slice(19, 20 + 1)
     let key = trajectories[trajectories.length * Math.random() << 0]
 
     return new Traffic({
@@ -442,8 +442,8 @@ export default class Game extends Phaser.State {
   }
 
   homePressed () {
-    for (let i = 0; i < trajectory.pedestrianWestNorth.length; i++) {
-      let newPoint = new Phaser.Point(trajectory.pedestrianWestNorth[i].x, trajectory.pedestrianWestNorth[i].y)
+    for (let i = 0; i < trajectory.bicycleNorthEast.length; i++) {
+      let newPoint = new Phaser.Point(trajectory.bicycleNorthEast[i].x, trajectory.bicycleNorthEast[i].y)
       this.points.push(newPoint)
     }
     console.log(this.lines)
