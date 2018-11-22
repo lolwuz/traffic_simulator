@@ -250,24 +250,6 @@ export default class Game extends Phaser.State {
     } else return !ASix && counterCars < 5
   }
 
-  easterEgg () {
-    let trajectories = Object.keys(trajectory)
-    let key = trajectories[trajectories.length * Math.random() << 0]
-
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.easter_egg_sprites[Math.floor(Math.random() * this.easter_egg_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'easter_egg',
-      anchorPoint: 0.5,
-      mass: 1000,
-      group: this.trafficGroup
-    })
-  }
-
   createLights () {
     for (let property in trajectory) {
       if (trajectory.hasOwnProperty(property)) {
