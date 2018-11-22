@@ -27,6 +27,7 @@ let test = {
         status: "red",
         timer: 0.0
     }],
+    waiting_times: [2, 3],
     mode: "normal",
     client: ["141.252.234.218", "1337"]
 };
@@ -125,7 +126,7 @@ class App extends Component {
         let controllers = this.state.controllers.map((controller, x) => {
             let entries = controller.entries.map((entry, y) => {
                 return (
-                    <Badge key={y} color="info" style={{marginRight: 4}}>{entry}</Badge>
+                    <Badge key={y} color="info" style={{marginRight: 4}}>{entry} {controller.waiting_times[y]}</Badge>
                 );
             });
 

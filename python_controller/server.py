@@ -35,11 +35,17 @@ def update_info(client):
 
     for controller in controllers:
         lights = []
+        waiting_times = []
         for light in controller.lights:
             lights.append(light.to_dict())
 
+        for t in controller.waiting_times:
+            diff = int(time.time() - t)
+            waiting_times.append(diff)
+
         info.append({
             "entries": controller.entries,
+            "waiting_times": waiting_times,
             "total_entries": controller.total_entries,
             "phase": controller.current_phase,
             "lights": lights,

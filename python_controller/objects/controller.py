@@ -16,6 +16,7 @@ class Controller:
         self.light_names = traffic_lights
         self.intersections = intersections
         self.entries = []
+        self.waiting_times = []
         self.lights = []
         self.phases = _PHASES
 
@@ -60,10 +61,13 @@ class Controller:
         for name in entries:
             if name not in self.entries:
                 self.entries.append(name)
+                self.waiting_times.append(time.time())
                 self.total_entries += 1
 
         for light in self.lights:
             if light.status == "green" and light.name in self.entries:
+                index = self.entries.index(light.name)
+                del self.waiting_times[index]
                 self.entries.remove(light.name)
 
     def is_intersecting(self, light_one, light_two):
@@ -123,9 +127,10 @@ class Controller:
 
     def get_waiting_factor(self, name):
         """ Calculates a factor based on waiting time """
-        light = self.get_light(name)
-        difference = time.time() - light.last_green
-        factor = round(difference / 20)
+        index = self.entries.index(name)
+
+        diff = int(time.time() - self.waiting_times[index])
+        factor = round(diff / 20)
 
         if name == "D1":  # Bus factor is higher
             factor = 4
@@ -190,6 +195,8 @@ class Controller:
             light.update()
 
             if light.status == "green" and light.name in self.entries:
+                index = self.entries.index(light.name)
+                del self.waiting_times[index]
                 self.entries.remove(light.name)
 
         self.send()
