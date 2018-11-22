@@ -1,7 +1,8 @@
 /* globals serverData, socket */
 import Phaser from 'phaser'
 import intersects from '../intersects.json'
-import trajectory from '../trajectory'
+import { ArrayBufferToString, StringToArrayBuffer } from '../binairyframe'
+
 
 export default class Traffic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, group}) {
@@ -119,8 +120,10 @@ export default class Traffic extends Phaser.Sprite {
 
           if (point.light === lights.light) {
             let sendArray = [point.light]
+            let jsonString = JSON.stringify(sendArray)
+            let arrayBuffer = StringToArrayBuffer(jsonString)
 
-            socket.send(JSON.stringify(sendArray))
+            socket.send(arrayBuffer)
 
             if (lights.status === 'green') {
               break
