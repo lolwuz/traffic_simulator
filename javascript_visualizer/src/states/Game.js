@@ -15,7 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
-    this.easter_eggs_enabled = true
+    this.easter_eggs_enabled = false
 
     this.points = []
     this.lines = []
@@ -81,223 +81,126 @@ export default class Game extends Phaser.State {
   }
 
   randomVehicle () {
-    switch (Math.floor(Math.random() * 9)) {
-      case 0:
-        // Regular car
-        let trajectories = Object.keys(trajectory).slice(0, 11 + 1)
-        let trajectIndex = trajectories.length * Math.random() << 0
-        let key = trajectories[trajectIndex]
-        if (this.checkTrajectory(trajectIndex, key)) {
-          this.game.add.existing(this.randomCar(key))
-        }
-        break
-      case 1:
-        // Motor
-        trajectories = Object.keys(trajectory).slice(0, 11 + 1)
-        trajectIndex = trajectories.length * Math.random() << 0
-        key = trajectories[trajectIndex]
-        if (this.checkTrajectory(trajectIndex, key)) {
-          this.game.add.existing(this.randomMotor(key))
-        }
-        break
-      case 2:
-        // Bicycle
-        this.game.add.existing(this.randomBicycle())
-        break
-      case 3:
-        // Motorcycle
-        this.game.add.existing(this.randomMotorcycle())
-        break
-      case 4:
-        // Truck
-        trajectories = Object.keys(trajectory).slice(0, 11 + 1)
-        trajectIndex = trajectories.length * Math.random() << 0
-        key = trajectories[trajectIndex]
-        if (this.checkTrajectory(trajectIndex, key)) {
-          this.game.add.existing(this.randomTruck(key))
-        }
-        break
-      case 5:
-        // Bus
-        trajectories = Object.keys(trajectory).slice(0, 11 + 1)
-        trajectIndex = trajectories.length * Math.random() << 0
-        key = trajectories[trajectIndex]
-        if (this.checkTrajectory(trajectIndex, key)) {
-          this.game.add.existing(this.randomBus(key))
-        }
-        break
-      case 6:
-        // van
-        trajectories = Object.keys(trajectory).slice(0, 11 + 1)
-        trajectIndex = trajectories.length * Math.random() << 0
-        key = trajectories[trajectIndex]
-        if (this.checkTrajectory(trajectIndex, key)) {
-          this.game.add.existing(this.randomVan(key))
-        }
-        break
-      case 7:
-        // Train
-        this.game.add.existing(this.randomTrain())
-        break
-      case 8:
-        // Pedestrian
-        let pedestrian = this.randomPedestrian()
-        pedestrian.animations.add('walk')
-        pedestrian.animations.play('walk', 20, true)
-        this.game.add.existing(pedestrian)
-        break
-      case 9:
-        // Easter egg
-        if (this.easter_eggs_enabled) {
-          this.game.add.existing(this.easterEgg())
-        }
+    let percentage = Math.floor(Math.random() * 100)
+    let trajectories
+    let trajectIndex
+    let key
+    let sprite
+    let speed
+    let type
+    let mass
+
+    if (percentage <= 30) {
+      // Car
+      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.regular_sprites[Math.floor(Math.random() * this.regular_sprites.length)]
+      speed = 50
+      type = 'car'
+      mass = 750
+      // if (!this.checkTrajectory(trajectIndex, key)) return
+    } else if (percentage <= 32) {
+      // Van
+      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.van_sprites[Math.floor(Math.random() * this.van_sprites.length)]
+      speed = 50
+      type = 'van'
+      mass = 800
+      // if (!this.checkTrajectory(trajectIndex, key)) return
+    } else if (percentage <= 34) {
+      // Motor
+      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      speed = 50
+      sprite = this.motor_sprites[Math.floor(Math.random() * this.motor_sprites.length)]
+      type = 'motor'
+      mass = 700
+      // if (!this.checkTrajectory(trajectIndex, key)) return
+    } else if (percentage <= 64) {
+      // Pedestrian
+      trajectories = Object.keys(trajectory).slice(20, 25 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)]
+      speed = 10
+      type = 'pedestrian'
+      mass = 300
+    } else if (percentage <= 92) {
+      // Bicycle
+      trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.bicycle_sprites[Math.floor(Math.random() * this.bicycle_sprites.length)]
+      speed = 20
+      type = 'bicycle'
+      mass = 500
+    } else if (percentage <= 94) {
+      // Motorcycle
+      trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.motorcycle_sprites[Math.floor(Math.random() * this.motorcycle_sprites.length)]
+      speed = 30
+      type = 'motorcycle'
+      mass = 600
+    } else if (percentage <= 96) {
+      // Bus
+      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.bus_sprites[Math.floor(Math.random() * this.bus_sprites.length)]
+      speed = 50
+      type = 'bus'
+      mass = 900
+      // if (!this.checkTrajectory(trajectIndex, key)) return
+    } else if (percentage <= 98) {
+      // Truck
+      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.truck_sprites[Math.floor(Math.random() * this.truck_sprites.length)]
+      speed = 50
+      type = 'truck'
+      mass = 950
+      // if (!this.checkTrajectory(trajectIndex, key)) return
+    } else if (percentage <= 99) {
+      // Train
+      trajectories = Object.keys(trajectory).slice(18, 19 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.train_sprites[Math.floor(Math.random() * this.train_sprites.length)]
+      speed = 75
+      type = 'train'
+      mass = 1000
+    } else {
+      // Easter egg
+      if (!this.easter_eggs_enabled) return
+      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectIndex = trajectories.length * Math.random() << 0
+      key = trajectories[trajectIndex]
+      sprite = this.easter_egg_sprites[Math.floor(Math.random() * this.easter_egg_sprites.length)]
+      speed = 50
+      type = 'easter_egg'
+      mass = 10
     }
-  }
 
-  randomCar (key) {
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.regular_sprites[Math.floor(Math.random() * this.regular_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'car',
-      anchorPoint: 0.5,
-      mass: 750,
-      group: this.trafficGroup
-    })
-  }
-
-  randomBicycle () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
-    let key = trajectories[trajectories.length * Math.random() << 0]
-
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.bicycle_sprites[Math.floor(Math.random() * this.bicycle_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'bicycle',
-      anchorPoint: 0.5,
-      mass: 500,
-      group: this.trafficGroup
-    })
-  }
-
-  randomPedestrian () {
-    let trajectories = Object.keys(trajectory).slice(20, 25 + 1)
-    let key = trajectories[trajectories.length * Math.random() << 0]
-
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 10,
-      type: 'pedestrian',
-      anchorPoint: 0.5,
-      mass: 300
-    })
-  }
-
-  randomMotorcycle () {
-    let trajectories = Object.keys(trajectory).slice(12, 17 + 1)
-    let key = trajectories[trajectories.length * Math.random() << 0]
-
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.motorcycle_sprites[Math.floor(Math.random() * this.motorcycle_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'motorcycle',
-      anchorPoint: 0.5,
-      mass: 700,
-      group: this.trafficGroup
-    })
-  }
-
-  randomMotor (key) {
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.motor_sprites[Math.floor(Math.random() * this.motor_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'motor',
-      anchorPoint: 0.5,
-      mass: 700,
-      group: this.trafficGroup
-    })
-  }
-
-  randomTruck (key) {
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.truck_sprites[Math.floor(Math.random() * this.truck_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'truck',
-      anchorPoint: 0.5,
-      mass: 950,
-      group: this.trafficGroup
-    })
-  }
-
-  randomBus (key) {
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.bus_sprites[Math.floor(Math.random() * this.bus_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'bus',
-      anchorPoint: 0.5,
-      mass: 900,
-      group: this.trafficGroup
-    })
-  }
-
-  randomVan (key) {
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.van_sprites[Math.floor(Math.random() * this.van_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'van',
-      anchorPoint: 0.5,
-      mass: 800,
-      group: this.trafficGroup
-    })
-  }
-
-  randomTrain () {
-    let trajectories = Object.keys(trajectory).slice(18, 19 + 1)
-    let key = trajectories[trajectories.length * Math.random() << 0]
-
-    return new Traffic({
-      game: this.game,
-      x: trajectory[key][0].x,
-      y: trajectory[key][0].y,
-      asset: this.train_sprites[Math.floor(Math.random() * this.train_sprites.length)],
-      trajectoryArray: trajectory[key],
-      speed: 50,
-      type: 'train',
-      anchorPoint: 0.5,
-      mass: 1000,
-      group: this.trafficGroup
-    })
+    this.game.add.existing(
+      new Traffic({
+        game: this.game,
+        x: trajectory[key][0].x,
+        y: trajectory[key][0].y,
+        asset: sprite,
+        trajectoryArray: trajectory[key],
+        speed: speed,
+        type: type,
+        anchorPoint: 0.5,
+        mass: mass,
+        group: this.trafficGroup
+      }))
   }
 
   checkTrajectory (trajectIndex, key) {
@@ -312,8 +215,7 @@ export default class Game extends Phaser.State {
           for (let j = 0; j < allChildren[i].trajectoryArray.length; j++) {
             let light = allChildren[i].trajectoryArray[j]
             if (typeof light.light !== 'undefined') {
-              let indexLight = j
-              if (allChildren[i].trajectoryArrayPassed.length <= indexLight) {
+              if (allChildren[i].trajectoryArrayPassed.length <= j) {
                 if (trajectIndex === 6 || trajectIndex === 7) {
                   ASix = true
                   let trajectIndexTemp = (trajectIndex === 6 ? trajectIndex + 1 : trajectIndex)
@@ -325,8 +227,7 @@ export default class Game extends Phaser.State {
                       for (let l = 0; l < allChildren[k].trajectoryArray.length; l++) {
                         let lightTemp = allChildren[k].trajectoryArray[l]
                         if (typeof lightTemp.light !== 'undefined') {
-                          let indexLightTemp = l
-                          if (allChildren[k].trajectoryArrayPassed.length <= indexLightTemp) {
+                          if (allChildren[k].trajectoryArrayPassed.length <= l) {
                             counterASix++
                           }
                         }
@@ -346,11 +247,7 @@ export default class Game extends Phaser.State {
 
     if (ASix && (counterCars + counterASix) <= 5) {
       return true
-    } else if (!ASix && counterCars < 5) {
-      return true
-    } else {
-      return false
-    }
+    } else return !ASix && counterCars < 5
   }
 
   easterEgg () {
@@ -479,7 +376,7 @@ export default class Game extends Phaser.State {
   }
 
   /** Updates the camera scale when scrolling */
-  updateScale (pointer) {
+  updateScale () {
     let newScale = this.scale
     if (this.cursor.up.isDown) {
       newScale += 0.01
