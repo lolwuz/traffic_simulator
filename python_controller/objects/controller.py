@@ -5,18 +5,18 @@ import json
 
 
 class Controller:
-    def __init__(self, server, client, traffic_lights, intersections):
+    def __init__(self, client, traffic_lights, intersections):
         """
         Controller
         :param traffic_lights: list of traffic_light names
         :param intersections: 2d numpy array of intersections
         """
-        self.server = server
         self.client = client
         self.last_send = dict()
         self.light_names = traffic_lights
         self.intersections = intersections
         self.entries = []
+        self.waiting_times = []
         self.lights = []
         self.phases = _PHASES
 
@@ -51,11 +51,7 @@ class Controller:
             self.last_send = dict_array
             send_json = json.dumps(dict_array)
 
-            if self.client["id"] == 0:  # Debug
-                pass
-                # self.server.send_message_to_all(send_json)
-            else:
-                self.server.send_message(self.client, send_json)
+            self.client.sendMessage(send_json)
 
     def entry(self, entries):
         """
@@ -65,10 +61,13 @@ class Controller:
         for name in entries:
             if name not in self.entries:
                 self.entries.append(name)
+                self.waiting_times.append(time.time())
                 self.total_entries += 1
 
         for light in self.lights:
             if light.status == "green" and light.name in self.entries:
+                index = self.entries.index(light.name)
+                del self.waiting_times[index]
                 self.entries.remove(light.name)
 
     def is_intersecting(self, light_one, light_two):
@@ -128,9 +127,10 @@ class Controller:
 
     def get_waiting_factor(self, name):
         """ Calculates a factor based on waiting time """
-        light = self.get_light(name)
-        difference = time.time() - light.last_green
-        factor = round(difference / 20)
+        index = self.entries.index(name)
+
+        diff = int(time.time() - self.waiting_times[index])
+        factor = round(diff / 20)
 
         if name == "D1":  # Bus factor is higher
             factor = 4
@@ -195,6 +195,8 @@ class Controller:
             light.update()
 
             if light.status == "green" and light.name in self.entries:
+                index = self.entries.index(light.name)
+                del self.waiting_times[index]
                 self.entries.remove(light.name)
 
         self.send()

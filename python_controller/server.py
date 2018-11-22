@@ -1,48 +1,76 @@
 #!/usr/bin/env python
+from objects.controller import Controller
+from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 import os
 import random
-from objects.controller import Controller
-from websocket_server import WebsocketServer
 import json
 import pandas
 import time
-# import mysql.connector as mariadb
-
 try:
     import thread as thread  # For ubuntu thread
 except ModuleNotFoundError:
     import _thread as thread
 
 
-class Server:
-    _ADDRESS = "127.0.0.1"
+_ADDRESS = "127.0.0.1"
+clients = []
+controllers = []
+info_clients = []
 
-    def __init__(self):
-        self.controllers = []
-        self.server = WebsocketServer(8080, host='0.0.0.0')
-        self.server.set_fn_new_client(self.new_client)
-        self.server.set_fn_client_left(self.client_left)
-        self.server.set_fn_message_received(self.on_message)
-        self.is_info_server = False
-        self.info_client = None
 
-        # self.maria_db_connection = mariadb.connect(user='root', password='lolwuz', database='controllers')
-        # self.cursor = self.maria_db_connection.cursor()
+def update():
+    """ Updates the active controllers """
+    while True:
+        for controller in controllers:
+            controller.update()
 
-        self.on_open()
+        for client in info_clients:
+            update_info(client)
 
-        self.server.run_forever()
+        time.sleep(0.2)
 
-    def new_client(self, client, server):
+
+def update_info(client):
+    info = []
+
+    for controller in controllers:
+        lights = []
+        waiting_times = []
+        for light in controller.lights:
+            lights.append(light.to_dict())
+
+        for t in controller.waiting_times:
+            diff = int(time.time() - t)
+            waiting_times.append(diff)
+
+        info.append({
+            "entries": controller.entries,
+            "waiting_times": waiting_times,
+            "total_entries": controller.total_entries,
+            "phase": controller.current_phase,
+            "lights": lights,
+            "mode": controller.mode,
+            "client": controller.client.address
+        })
+
+    send_json = json.dumps(info)
+    client.sendMessage(send_json)
+
+
+def on_open():
+    thread.start_new_thread(update, ())
+
+
+class SimpleServer(WebSocket):
+    def handleConnected(self):
         """ A new client was added to the server """
-        print(client["address"])
-        if client["address"][0] == self._ADDRESS:
+        print(self.address[0])
+        if self.address[0] == _ADDRESS:
             print("info server has connected")
-            self.is_info_server = True
-            self.info_client = client
+            info_clients.append(self)
             return
 
-        print("client has connected")
+        print("client has connected: " + self.address[0])
         print(server)
 
         data_frame = pandas.read_csv('Intersects.csv', sep=";")
@@ -50,85 +78,47 @@ class Server:
         traffic_lights = list(data_frame.columns.values)
         del traffic_lights[0]
 
-        new_controller = Controller(server, client, traffic_lights, matrix)
-        self.controllers.append(new_controller)
+        new_controller = Controller(self, traffic_lights, matrix)
+        controllers.append(new_controller)
 
-    def client_left(self, client, server):
+    def handleClose(self):
         """ A client has disconnected from the server """
-        print (client["address"][0])
-        if client["address"][0] == self._ADDRESS:
+        print("client disconnected: " + self.address[0])
+        if self in info_clients:
             print("info server has disconnected")
-            self.is_info_server = False
-            self.info_client = None
-            return
+            info_clients.remove(self)
 
-        print("client: " + str(client["id"]) + " disconnected")
-        for controller in self.controllers:
-            if client["id"] == controller.client["id"]:
-                self.controllers.remove(controller)
+        print("removing controller")
+        for controller in controllers:
+            if controller.client == self:
+                print("REMOVED")
+                controllers.remove(controller)
 
-    def on_message(self, client, server, message):
+        print("removing client")
+        clients.remove(self)
+
+    def handleMessage(self):
         """ Handles messages and json decoding """
-        if client["address"][0] == self._ADDRESS:
-            get = json.loads(message)
-            print(get)
+        for client in info_clients:
+            if client == self:
+                json_data = json.loads(self.data)
+                for controller in controllers:
+                    if controller.client.address[0] == json_data["client"][0]:
+                        controller.mode = json_data["mode"]
 
-            for controller in self.controllers:
-                if controller.client["id"] == get["id"]:
-                    controller.mode = get["mode"]
-                    print(controller)
-
-            return
-
-        for controller in self.controllers:
-            if client["id"] == controller.client["id"]:
+        for controller in controllers:
+            if self == controller.client:
                 # Make a entry to a existing controller
                 entry_from_json = []
                 try:
-                    entry_from_json = json.loads(message)
+                    entry_from_json = json.loads(self.data)
                 except:
-                    self.server.send_message(client, "IKKE NIET SNAPPE DIKKE ERROR OEPSIE")
+                    self.sendMessage("IKKE NIET SNAPPE DIKKE ERROR OEPSIE")
 
                 controller.entry(entry_from_json)
 
-    def update(self):
-        """ Updates the active controllers """
-        while True:
-            for controller in self.controllers:
-                controller.update()
-
-            if self.is_info_server:
-                self.update_info()
-
-            time.sleep(0.2)
-
-    def update_info(self):
-        info = []
-
-        for controller in self.controllers:
-            lights = []
-            for light in controller.lights:
-                lights.append(light.to_dict())
-
-            info.append({
-                "id": controller.client["id"],
-                "entries": controller.entries,
-                "total_entries": controller.total_entries,
-                "phase": controller.current_phase,
-                "lights": lights,
-                "mode": controller.mode,
-                "client": controller.client["address"]
-            })
-
-        send_json = json.dumps(info)
-
-        self.server.send_message(self.info_client, send_json)
-        """ Database """
-        # self.cursor.execute("SELECT * FROM controllers")
-
-    def on_open(self):
-        thread.start_new_thread(self.update, ())
-
 
 if __name__ == "__main__":
-    server = Server()
+    server = SimpleWebSocketServer('0.0.0.0', 8080, SimpleServer)
+    on_open()
+    server.serveforever()

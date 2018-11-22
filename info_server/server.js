@@ -31,9 +31,10 @@ app.get('/info', (req, res) => {
 
 app.post('/mode', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    console.log(req.body);      // your JSON
+    console.log(req.body);
+
     client.send(JSON.stringify(req.body));
-    res.send(req.body);
+    res.send("OK");
 });
 
 app.listen(3001, () =>
