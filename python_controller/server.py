@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 from objects.controller import Controller
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
-import os
-import random
 import json
 import pandas
 import time
@@ -71,7 +69,6 @@ class SimpleServer(WebSocket):
             return
 
         print("client has connected: " + self.address[0])
-        print(server)
 
         data_frame = pandas.read_csv('Intersects.csv', sep=";")
         matrix = data_frame.values
@@ -88,13 +85,10 @@ class SimpleServer(WebSocket):
             print("info server has disconnected")
             info_clients.remove(self)
 
-        print("removing controller")
         for controller in controllers:
             if controller.client == self:
-                print("REMOVED")
                 controllers.remove(controller)
 
-        print("removing client")
         clients.remove(self)
 
     def handleMessage(self):
@@ -112,10 +106,14 @@ class SimpleServer(WebSocket):
                 entry_from_json = []
                 try:
                     entry_from_json = json.loads(self.data)
-                except:
-                    self.sendMessage("IKKE NIET SNAPPE DIKKE ERROR OEPSIE")
 
-                controller.entry(entry_from_json)
+                    for entry in entry_from_json:
+                        if entry not in controller.light_names:
+                            raise Exception(entry + ' value not in light names')
+
+                    controller.entry(entry_from_json)
+                except Exception as error:
+                    self.sendMessage("Exception: " + repr(error))
 
 
 if __name__ == "__main__":
