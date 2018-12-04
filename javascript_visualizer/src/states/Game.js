@@ -15,7 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
-    this.easter_eggs_enabled = true
+    this.easter_eggs_enabled = false
 
     this.points = []
     this.lines = []
@@ -30,11 +30,11 @@ export default class Game extends Phaser.State {
     this.bus_sprites = ['bus_1']
     this.train_sprites = ['train_1']
     this.truck_sprites = ['truck_1']
-    this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor', 'mariska']
+    this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor']
 
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
-    //this.debugPoints()
+    // this.debugPoints()
   }
 
   create () {
@@ -336,6 +336,7 @@ export default class Game extends Phaser.State {
   }
 
   updateLights () {
+    // console.log(serverData)
     for (let i = 0; i < this.lightGraphics.length; i++) {
       let lightGraphic = this.lightGraphics[i]
 
