@@ -34,7 +34,7 @@ export default class Game extends Phaser.State {
 
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
-    //this.debugPoints()
+    // this.debugPoints()
   }
 
   create () {
@@ -89,6 +89,7 @@ export default class Game extends Phaser.State {
     let speed
     let type
     let mass
+    let position
 
     if (percentage <= 30) {
       // Car
@@ -99,7 +100,8 @@ export default class Game extends Phaser.State {
       speed = 50
       type = 'car'
       mass = 750
-      // if (!this.checkTrajectory(trajectIndex, key)) return
+      position = this.checkTrajectory(trajectIndex, key)
+      console.log(position)
     } else if (percentage <= 32) {
       // Van
       trajectories = Object.keys(trajectory).slice(0, 11 + 1)
@@ -122,7 +124,7 @@ export default class Game extends Phaser.State {
       // if (!this.checkTrajectory(trajectIndex, key)) return
     } else if (percentage <= 64) {
       // Pedestrian
-      trajectories = Object.keys(trajectory).slice(20, 25 + 1)
+      trajectories = Object.keys(trajectory).slice(22, 27 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)]
@@ -131,7 +133,7 @@ export default class Game extends Phaser.State {
       mass = 300
     } else if (percentage <= 92) {
       // Bicycle
-      trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+      trajectories = Object.keys(trajectory).slice(13, 19 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.bicycle_sprites[Math.floor(Math.random() * this.bicycle_sprites.length)]
@@ -140,7 +142,7 @@ export default class Game extends Phaser.State {
       mass = 500
     } else if (percentage <= 94) {
       // Motorcycle
-      trajectories = Object.keys(trajectory).slice(12, 17 + 1)
+      trajectories = Object.keys(trajectory).slice(13, 19 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.motorcycle_sprites[Math.floor(Math.random() * this.motorcycle_sprites.length)]
@@ -149,7 +151,7 @@ export default class Game extends Phaser.State {
       mass = 600
     } else if (percentage <= 96) {
       // Bus
-      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectories = Object.keys(trajectory).slice(0, 12 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.bus_sprites[Math.floor(Math.random() * this.bus_sprites.length)]
@@ -169,7 +171,7 @@ export default class Game extends Phaser.State {
       // if (!this.checkTrajectory(trajectIndex, key)) return
     } else if (percentage <= 99) {
       // Train
-      trajectories = Object.keys(trajectory).slice(18, 19 + 1)
+      trajectories = Object.keys(trajectory).slice(20, 21 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.train_sprites[Math.floor(Math.random() * this.train_sprites.length)]
@@ -179,7 +181,7 @@ export default class Game extends Phaser.State {
     } else {
       // Easter egg
       if (!this.easter_eggs_enabled) return
-      trajectories = Object.keys(trajectory).slice(0, 11 + 1)
+      trajectories = Object.keys(trajectory).slice(0, 12 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.easter_egg_sprites[Math.floor(Math.random() * this.easter_egg_sprites.length)]
@@ -191,8 +193,8 @@ export default class Game extends Phaser.State {
     this.game.add.existing(
       new Traffic({
         game: this.game,
-        x: trajectory[key][0].x,
-        y: trajectory[key][0].y,
+        x: position.x,
+        y: position.y,
         asset: sprite,
         trajectoryArray: trajectory[key],
         speed: speed,
@@ -206,48 +208,32 @@ export default class Game extends Phaser.State {
   checkTrajectory (trajectIndex, key) {
     let currentTrajectory = trajectory[key]
     let allChildren = this.game.world.children
-    let counterCars = 0
-    let counterASix = 0
-    let ASix = false
+    let laneLength = 0
+    let carsInLane = 0
+    let carsWidth = 0
+    let position
+
     for (let i = 0; i < allChildren.length; i++) {
       if (allChildren[i].constructor === Traffic) {
         if (allChildren[i].trajectoryArray === currentTrajectory) {
           for (let j = 0; j < allChildren[i].trajectoryArray.length; j++) {
             let light = allChildren[i].trajectoryArray[j]
             if (typeof light.light !== 'undefined') {
-              if (allChildren[i].trajectoryArrayPassed.length <= j) {
-                if (trajectIndex === 6 || trajectIndex === 7) {
-                  ASix = true
-                  let trajectIndexTemp = (trajectIndex === 6 ? trajectIndex + 1 : trajectIndex)
-                  let trajectoriesTemp = Object.keys(trajectory).slice(0, 11 + 1)
-                  let keyTemp = trajectoriesTemp[trajectIndexTemp]
-                  let currentTrajectoryTemp = trajectory[keyTemp]
-                  for (let k = 0; k < allChildren.length; k++) {
-                    if (allChildren[k].trajectoryArray === currentTrajectoryTemp) {
-                      for (let l = 0; l < allChildren[k].trajectoryArray.length; l++) {
-                        let lightTemp = allChildren[k].trajectoryArray[l]
-                        if (typeof lightTemp.light !== 'undefined') {
-                          if (allChildren[k].trajectoryArrayPassed.length <= l) {
-                            counterASix++
-                          }
-                        }
-                      }
-                    }
-                  }
+              laneLength = Math.sqrt(Math.pow((light.x) - (allChildren[i].trajectoryArray[0].x), 2) + Math.pow((light.y) - (allChildren[i].trajectoryArray[0].y), 2))
+              if (allChildren[i].trajectoryArrayPassed.length >= 0) {
+                carsInLane += allChildren[i].width
+                if (carsInLane >= laneLength) {
+                  carsWidth += allChildren[i].width
                 }
-              }
-              if (counterASix !== 5) {
-                counterCars++
               }
             }
           }
+          console.log(carsWidth)
         }
       }
     }
-
-    if (ASix && (counterCars + counterASix) <= 5) {
-      return true
-    } else return !ASix && counterCars < 5
+    position = { x: trajectory[key][0].x, y: trajectory[key][0].y - carsWidth }
+    return position
   }
 
   createLights () {
