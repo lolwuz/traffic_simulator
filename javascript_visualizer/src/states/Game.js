@@ -30,7 +30,7 @@ export default class Game extends Phaser.State {
     this.bus_sprites = ['bus_1']
     this.train_sprites = ['train_1']
     this.truck_sprites = ['truck_1']
-    this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor', 'mariska']
+    this.easter_egg_sprites = ['david', 'wesket', 'bas', 'victor']
 
     this.lastSpawn = new Date().getTime()
     this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (3000 - 500)) + 500
@@ -65,7 +65,8 @@ export default class Game extends Phaser.State {
     let time = new Date().getTime()
     if (this.nextSpawn < time) {
       this.lastSpawn = time
-      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * (1000 - 500)) + 500
+      this.nextSpawn = this.lastSpawn + Math.round(Math.random() * 250) + 250
+      // console.log('lastSpawn: ' + this.lastSpawn + ' nextSpawn: ' + this.nextSpawn)
       this.randomVehicle()
     }
 
@@ -81,7 +82,7 @@ export default class Game extends Phaser.State {
   }
 
   randomVehicle () {
-    let percentage = Math.floor(Math.random() * 100)
+    let percentage = Math.floor(Math.random() * 101)
     let trajectories
     let trajectIndex
     let key
@@ -90,6 +91,7 @@ export default class Game extends Phaser.State {
     let type
     let mass
     let position
+    let isPedestrian = false
 
     if (percentage <= 30) {
       // Car
@@ -128,9 +130,10 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)]
-      speed = 10
+      speed = 15
       type = 'pedestrian'
       mass = 300
+      isPedestrian = true
     } else if (percentage <= 92) {
       // Bicycle
       trajectories = Object.keys(trajectory).slice(13, 19 + 1)
@@ -190,19 +193,23 @@ export default class Game extends Phaser.State {
       mass = 10
     }
 
-    this.game.add.existing(
-      new Traffic({
-        game: this.game,
-        x: position.x,
-        y: position.y,
-        asset: sprite,
-        trajectoryArray: trajectory[key],
-        speed: speed,
-        type: type,
-        anchorPoint: 0.5,
-        mass: mass,
-        group: this.trafficGroup
-      }))
+    let newTraffic = new Traffic({
+      game: this.game,
+      x: trajectory[key][0].x,
+      y: trajectory[key][0].y,
+      asset: sprite,
+      trajectoryArray: trajectory[key],
+      speed: speed,
+      type: type,
+      anchorPoint: 0.5,
+      mass: mass,
+      group: this.trafficGroup
+    })
+    if (isPedestrian) {
+      newTraffic.animations.add('walk')
+      newTraffic.animations.play('walk', 5, true)
+    }
+    this.game.add.existing(newTraffic)
   }
 
   checkTrajectory (trajectIndex, key) {
@@ -315,6 +322,7 @@ export default class Game extends Phaser.State {
   }
 
   updateLights () {
+    // console.log(serverData)
     for (let i = 0; i < this.lightGraphics.length; i++) {
       let lightGraphic = this.lightGraphics[i]
 
