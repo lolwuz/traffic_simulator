@@ -126,7 +126,7 @@ export default class Game extends Phaser.State {
       // if (!this.checkTrajectory(trajectIndex, key)) return
     } else if (percentage <= 64) {
       // Pedestrian
-      trajectories = Object.keys(trajectory).slice(22, 27 + 1)
+      trajectories = Object.keys(trajectory).slice(23, 28 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)]
@@ -174,7 +174,7 @@ export default class Game extends Phaser.State {
       // if (!this.checkTrajectory(trajectIndex, key)) return
     } else if (percentage <= 99) {
       // Train
-      trajectories = Object.keys(trajectory).slice(20, 21 + 1)
+      trajectories = Object.keys(trajectory).slice(19, 22 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.train_sprites[Math.floor(Math.random() * this.train_sprites.length)]
