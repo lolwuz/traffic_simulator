@@ -3,7 +3,6 @@ import Phaser from 'phaser'
 import intersects from '../intersects.json'
 import { ArrayBufferToString, StringToArrayBuffer } from '../binairyframe'
 
-
 export default class Traffic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, lookAhead}) {
     super(game, x, y, asset)
