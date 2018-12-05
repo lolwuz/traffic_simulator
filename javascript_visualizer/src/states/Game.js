@@ -15,7 +15,7 @@ export default class Game extends Phaser.State {
     this.camera = this.game.camera
     this.game.input.mouse.capture = true
     this.isDown = false
-    this.easter_eggs_enabled = true
+    this.easter_eggs_enabled = false
 
     this.points = []
     this.lines = []
@@ -380,8 +380,8 @@ export default class Game extends Phaser.State {
 
     if (newScale !== this.scale) {
       // Don't zoom further than 0.7
-      if (newScale < 0.7) {
-        newScale = 0.7
+      if (newScale < 0.4) {
+        newScale = 0.4
       }
       this.scale = newScale
       this.game.world.scale.setTo(newScale)

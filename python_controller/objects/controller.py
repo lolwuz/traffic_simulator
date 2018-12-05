@@ -1,5 +1,5 @@
 import time
-from constants import MINIMUM_TIMES, _PHASES
+from constants import MINIMUM_TIMES, _PHASES, MARGINS
 from objects.light import Light
 import json
 
@@ -32,7 +32,7 @@ class Controller:
         :return:
         """
         for name in self.light_names:
-            self.lights.append(Light(name))
+            self.lights.append(Light(name, MARGINS[name]))
 
         # Build phases
         for key in self.phases:
@@ -70,7 +70,7 @@ class Controller:
                 del self.waiting_times[index]
                 self.entries.remove(light.name)
 
-    def is_intersecting(self, light_one, light_two):
+    def is_intersecting(self, light_one, light_two) -> bool:
         """
         Determines if lights are intersecting
         :param light_one: Light name
@@ -83,7 +83,7 @@ class Controller:
 
         return intersect == '1'
 
-    def get_complete_phase(self, phase):
+    def get_complete_phase(self, phase) -> str:
         """
         Determines what lights are allowed in this phase
         :param phase: Phase lights
@@ -102,13 +102,13 @@ class Controller:
 
         return phase
 
-    def get_best_phase(self):
+    def get_best_phase(self) -> list:
         """
         Checks for every phase what scores it get according to:
             - Most matched entries with lights in phase
             - How long entries have been waiting
             - Is there a train inbound (switch to best phase without E1)
-        :return: Key of best phase and score
+        :return: Key of best phase and score in a list
         """
         best_phase = ["A_1", 0]
 
@@ -125,7 +125,7 @@ class Controller:
 
         return best_phase
 
-    def get_waiting_factor(self, name):
+    def get_waiting_factor(self, name) -> int:
         """ Calculates a factor based on waiting time """
         index = self.entries.index(name)
 
@@ -140,7 +140,7 @@ class Controller:
 
         return factor
 
-    def get_light(self, name):
+    def get_light(self, name) -> Light:
         """
         Returns the correct light from the lights list
         :param name:
@@ -172,6 +172,7 @@ class Controller:
                 light.switch_status("red")
 
     def initialize_mode(self):
+        """ Starts a special mode when Controller.mode is not 'normal' """
         phase = []
         if self.mode == "chaos":
             phase = self.light_names
@@ -184,6 +185,7 @@ class Controller:
                 light.switch_status("red")
 
     def update(self):
+        """ Check for changes """
         best_phase = self.get_best_phase()
 
         if self.mode == "normal":

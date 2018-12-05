@@ -5,7 +5,7 @@ import { ArrayBufferToString, StringToArrayBuffer } from '../binairyframe'
 
 
 export default class Traffic extends Phaser.Sprite {
-  constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, group}) {
+  constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, lookAhead}) {
     super(game, x, y, asset)
     this.game.physics.p2.enable(this, false)
 
@@ -20,6 +20,7 @@ export default class Traffic extends Phaser.Sprite {
     this.type = type
     this.trajectoryArrayPassed = []
     this.trajectoryArray = trajectoryArray
+    this.lookAhead = lookAhead
     this.speed = speed
     this.stopped = false
     this.isClose = false
@@ -121,9 +122,9 @@ export default class Traffic extends Phaser.Sprite {
           if (point.light === lights.light) {
             let sendArray = [point.light]
             let jsonString = JSON.stringify(sendArray)
-            let arrayBuffer = StringToArrayBuffer(jsonString)
+            // let arrayBuffer = StringToArrayBuffer(jsonString)
 
-            socket.send(arrayBuffer)
+            socket.send(jsonString)
 
             if (lights.status === 'green') {
               break
