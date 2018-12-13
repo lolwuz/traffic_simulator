@@ -28,9 +28,11 @@ class Controller:
 
     def start(self):
         """
-        Turn all lights to red
+        Set defaults for this controller
         :return:
         """
+
+        print(self.light_names)
         for name in self.light_names:
             self.lights.append(Light(name, MARGINS[name]))
 
@@ -38,6 +40,8 @@ class Controller:
         for key in self.phases:
             self.phases[key] = self.get_complete_phase(self.phases[key])
 
+        print("phases")
+        print(self.phases)
         self.send()
 
     def send(self):
@@ -107,7 +111,7 @@ class Controller:
         Checks for every phase what scores it get according to:
             - Most matched entries with lights in phase
             - How long entries have been waiting
-            - Is there a train inbound (switch to best phase without E1)
+            - Is there a train inbound (switch to best phase without F1/2)
         :return: Key of best phase and score in a list
         """
         best_phase = ["A_1", 0]
@@ -135,7 +139,7 @@ class Controller:
         if name == "D1":  # Bus factor is higher
             factor = 4
 
-        if name == "E1":
+        if name in ["F1", "F2"]:
             factor = 10
 
         return factor

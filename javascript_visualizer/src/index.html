@@ -68,11 +68,11 @@
 <script>
   // Create WebSocket connection.
   const socket = new WebSocket('ws://159.69.219.206:8080')
-  const lights = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B1', 'B2', 'B3', 'C1.1', 'C1.2', 'C2.1', 'C2.2', 'C3.1', 'C3.2', 'D1', 'E1']
+  const lights = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'B1', 'B2', 'B3', 'C1.1', 'C1.2', 'C2.1', 'C2.2', 'C3.1', 'C3.2', 'D1', 'F1', "F2"]
   var serverData = [{light: 'A1', status: 'red'}, {light: 'A2', status: 'red'}, {light: 'A3', status: 'red'}, {light: 'A4', status: 'red'}, {light: 'A5', status: 'red'}, {light: 'A6', status: 'red'}, {light: 'A7', status: 'red'}, {light: 'A8', status: 'red'}, {light: 'A9', status: 'red'}, {light: 'A10', status: 'red'},
     {light: 'B1', status: 'red'}, {light: 'B2', status: 'red'}, {light: 'B3', status: 'red'},
     {light: 'C1.1', status: 'red'}, {light: 'C1.2', status: 'red'}, {light: 'C2.1', status: 'red'}, {light: 'C2.2', status: 'red'}, {light: 'C3.1', status: 'red'}, {light: 'C3.2', status: 'red'},
-    {light: 'D1', status: 'red'}, {light: 'E1', status: 'red'}]
+    {light: 'D1', status: 'red'}, {light: 'F1', status: 'red'}, {light: 'F2', status: 'red'}]
 
   // Add lights
   for (let i = 0; i < lights.length; i++) {

@@ -75,8 +75,8 @@ class SimpleServer(WebSocket):
         data_frame = pandas.read_csv('Intersects.csv', sep=";")
         matrix = data_frame.values
         traffic_lights = list(data_frame.columns.values)
-        del traffic_lights[0]
 
+        del traffic_lights[0]
         new_controller = Controller(self, traffic_lights, matrix)
         controllers.append(new_controller)
 
@@ -95,7 +95,6 @@ class SimpleServer(WebSocket):
 
     def handleMessage(self):
         """ Handles messages and json decoding """
-        print(self.data)
         for client in info_clients:
             if client == self:
                 json_data = json.loads(self.data)
