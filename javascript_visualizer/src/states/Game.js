@@ -252,6 +252,7 @@ export default class Game extends Phaser.State {
             let graphics = this.game.add.graphics(lights[i].x, lights[i].y)
 
             // draw a circle
+            // graphics.name = 'A'
             graphics.lineStyle(0)
             graphics.beginFill(0xFF0000, 0.8)
             graphics.drawCircle(470, 40, 40)
