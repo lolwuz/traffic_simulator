@@ -8,6 +8,8 @@ export default class Traffic extends Phaser.Sprite {
     super(game, x, y, asset)
     this.game.physics.p2.enable(this, false)
 
+    this.events.onKilled.add(this.onKilled, this, 1)
+
     this.body.setRectangle(this.width - 4, this.height - 4)
     this.body.enable = true
     this.body.onBeginContact.add(this.contact, this)
@@ -34,6 +36,12 @@ export default class Traffic extends Phaser.Sprite {
   update () {
     if (this.isColliding) {
       return
+    }
+
+    if (this.body.velocity.x === 0 && this.body.velocity.y === 0) {
+      this.animations.stop('walk')
+    } else {
+      this.animations.play('walk', 5, true)
     }
 
     this.updateFade()
@@ -99,7 +107,7 @@ export default class Traffic extends Phaser.Sprite {
 
   onKilled () {
     console.log('IM KILLED')
-    this.emitter.destroy()
+    this.destroy()
   }
 
   isPointReached (point) {

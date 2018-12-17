@@ -207,7 +207,7 @@ export default class Game extends Phaser.State {
     })
     if (isPedestrian) {
       newTraffic.animations.add('walk')
-      newTraffic.animations.play('walk', 5, true)
+      // newTraffic.animations.play('walk', 5, true)
     }
     this.game.add.existing(newTraffic)
   }
