@@ -114,7 +114,7 @@ class Controller:
             - Is there a train inbound (switch to best phase without F1/2)
         :return: Key of best phase and score in a list
         """
-        best_phase = ["A_1", 0]
+        best_phase = ["A_NORTH", 0]
 
         for key in self.phases:
             phase = self.phases[key]

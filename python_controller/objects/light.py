@@ -9,8 +9,8 @@ class Light:
         self.new_status = ""
         self.timer = 0  # Timer for traffic lights with a estimation timer
         self.last_green = time.time()
-        self.minimum_time = 10.0  # The lights minimum green Time
-        self.next_switch = float('inf')
+        self.minimum_time = 15.0  # The lights minimum green Time
+        self.next_change = float('inf')
 
     def to_dict(self) -> dict:
         """ Returns a dict representation of the light object """
@@ -27,18 +27,20 @@ class Light:
             return
 
         self.new_status = new_status
-        self.next_switch = time.time() + 3
+        self.next_change = time.time()
 
-        if new_status == "green":
-            self.next_switch += 3  # Delay of 3 seconds to save bikers and pedestrians from imminent death
+        if self.new_status == "green":
+            self.next_change = time.time() + self.margin
+            self.last_green = time.time()
+
+        if self.new_status == "red":
             if self.name[0] == "A":
-                self.last_green = time.time()
-
-        if new_status == "red":
-            if self.name[0] == "A":  # Light is about to change
-                self.status = "orange"  # Status is now orange
+                self.status = "orange"
+                self.next_change += 3
 
     def update(self):
         """ Update """
-        if self.next_switch < time.time():
+        if self.next_change <= time.time():
             self.status = self.new_status
+
+
