@@ -40,6 +40,7 @@ export default class Traffic extends Phaser.Sprite {
     if (socket.readyState !== 1) {
       this.body.velocity.x = 0
       this.body.velocity.y = 0
+      return
     }
     if (this.lifespan > 0 && this.lifespan < 2000 && this.alive) {
       this.alive = false
@@ -92,6 +93,16 @@ export default class Traffic extends Phaser.Sprite {
             this.trajectoryArray === traffic.trajectoryArray && !traffic.isColliding) {
             return true
           }
+
+          for (let i = 0; i < traffic.trajectoryArray.length; i++) {
+            if (traffic.trajectoryArray[i].light === 'A6') {
+              for (let ii = 0; ii < this.trajectoryArray.length; ii++) {
+                if (this.trajectoryArray[ii].light === 'A6') {
+                  return true
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -120,8 +131,6 @@ export default class Traffic extends Phaser.Sprite {
   }
 
   onKilled () {
-    console.log('IM KILLED')
-
     this.destroy()
   }
 

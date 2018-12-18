@@ -66,7 +66,6 @@ export default class Game extends Phaser.State {
     if (this.nextSpawn < time) {
       this.lastSpawn = time
       this.nextSpawn = this.lastSpawn + Math.round(Math.random() * 250) + 250
-      // console.log('lastSpawn: ' + this.lastSpawn + ' nextSpawn: ' + this.nextSpawn)
       this.randomVehicle()
     }
 
@@ -103,7 +102,6 @@ export default class Game extends Phaser.State {
       type = 'car'
       mass = 750
       position = this.checkTrajectory(trajectIndex, key)
-      console.log(position)
     } else if (percentage <= 32) {
       // Van
       trajectories = Object.keys(trajectory).slice(0, 11 + 1)
@@ -235,7 +233,6 @@ export default class Game extends Phaser.State {
               }
             }
           }
-          console.log(carsWidth)
         }
       }
     }
@@ -301,16 +298,11 @@ export default class Game extends Phaser.State {
   }
 
   spacePressed () {
-    console.log(this.points)
-
     this.lines = []
     this.points = []
   }
 
   deletePressed () {
-    console.log(this.lines)
-    console.log(this.points)
-
     this.lines.pop()
     this.points.pop()
   }
@@ -320,11 +312,9 @@ export default class Game extends Phaser.State {
       let newPoint = new Phaser.Point(trajectory.trainWestEast1[i].x, trajectory.trainWestEast1[i].y)
       this.points.push(newPoint)
     }
-    console.log(this.lines)
   }
 
   updateLights () {
-    // console.log(serverData)
     for (let i = 0; i < this.lightGraphics.length; i++) {
       let lightGraphic = this.lightGraphics[i]
 
