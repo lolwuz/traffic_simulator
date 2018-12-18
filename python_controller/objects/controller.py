@@ -23,6 +23,7 @@ class Controller:
         self.current_phase = ""
         self.total_entries = 0
         self.mode = "normal"
+        self.is_entry = False
 
         self.start()  # Set defaults for this controller
 
@@ -68,11 +69,15 @@ class Controller:
                 self.waiting_times.append(time.time())
                 self.total_entries += 1
 
+        if self.total_entries > 0:
+            self.is_entry = True
+
         for light in self.lights:
             if light.status == "green" and light.name in self.entries:
                 index = self.entries.index(light.name)
                 del self.waiting_times[index]
                 self.entries.remove(light.name)
+
 
     def is_intersecting(self, light_one, light_two) -> bool:
         """
@@ -140,7 +145,10 @@ class Controller:
             factor = 4
 
         if name in ["F1", "F2"]:
-            factor = 10
+            if name in self.entries:
+                factor = 10
+            else:
+                factor = 0
 
         return factor
 
@@ -163,7 +171,7 @@ class Controller:
         :param phase_name: name of the phase
         """
         for light in self.lights:
-            if not light.is_allowed_to_change():
+            if not light.is_allowed_to_change() or not self.is_entry:
                 return
 
         self.current_phase = phase_name

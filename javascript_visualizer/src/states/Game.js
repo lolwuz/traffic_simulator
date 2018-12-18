@@ -1,4 +1,4 @@
-/* globals serverData */
+/* globals serverData, socket */
 import Phaser from 'phaser'
 import Traffic from '../sprites/Traffic'
 import trajectory from '../trajectory'
@@ -99,7 +99,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.regular_sprites[Math.floor(Math.random() * this.regular_sprites.length)]
-      speed = 50
+      speed = 10.00
       type = 'car'
       mass = 750
       position = this.checkTrajectory(trajectIndex, key)
@@ -110,7 +110,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.van_sprites[Math.floor(Math.random() * this.van_sprites.length)]
-      speed = 50
+      speed = 10.00
       type = 'van'
       mass = 800
       // if (!this.checkTrajectory(trajectIndex, key)) return
@@ -119,7 +119,7 @@ export default class Game extends Phaser.State {
       trajectories = Object.keys(trajectory).slice(0, 11 + 1)
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
-      speed = 50
+      speed = 10.00
       sprite = this.motor_sprites[Math.floor(Math.random() * this.motor_sprites.length)]
       type = 'motor'
       mass = 700
@@ -130,7 +130,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.pedestrian_sprites[Math.floor(Math.random() * this.pedestrian_sprites.length)]
-      speed = 15
+      speed = 3.00
       type = 'pedestrian'
       mass = 300
       isPedestrian = true
@@ -140,7 +140,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.bicycle_sprites[Math.floor(Math.random() * this.bicycle_sprites.length)]
-      speed = 20
+      speed = 4.00
       type = 'bicycle'
       mass = 500
     } else if (percentage <= 94) {
@@ -149,7 +149,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.motorcycle_sprites[Math.floor(Math.random() * this.motorcycle_sprites.length)]
-      speed = 30
+      speed = 6.00
       type = 'motorcycle'
       mass = 600
     } else if (percentage <= 96) {
@@ -158,7 +158,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.bus_sprites[Math.floor(Math.random() * this.bus_sprites.length)]
-      speed = 50
+      speed = 10.00
       type = 'bus'
       mass = 900
       // if (!this.checkTrajectory(trajectIndex, key)) return
@@ -168,7 +168,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.truck_sprites[Math.floor(Math.random() * this.truck_sprites.length)]
-      speed = 50
+      speed = 10.00
       type = 'truck'
       mass = 950
       // if (!this.checkTrajectory(trajectIndex, key)) return
@@ -178,7 +178,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.train_sprites[Math.floor(Math.random() * this.train_sprites.length)]
-      speed = 75
+      speed = 15.00
       type = 'train'
       mass = 1000
     } else {
@@ -188,7 +188,7 @@ export default class Game extends Phaser.State {
       trajectIndex = trajectories.length * Math.random() << 0
       key = trajectories[trajectIndex]
       sprite = this.easter_egg_sprites[Math.floor(Math.random() * this.easter_egg_sprites.length)]
-      speed = 50
+      speed = 10.00
       type = 'easter_egg'
       mass = 10
     }
@@ -282,6 +282,7 @@ export default class Game extends Phaser.State {
 
   mousePressed (point) {
     if (this.game.input.activePointer.leftButton.isDown) {
+      this.game.paused = false
       let position = new Phaser.Point(point.worldX, point.worldY)
       this.points.push(position)
 
@@ -368,8 +369,8 @@ export default class Game extends Phaser.State {
 
     if (newScale !== this.scale) {
       // Don't zoom further than 0.7
-      if (newScale < 0.4) {
-        newScale = 0.4
+      if (newScale < 0.6) {
+        newScale = 0.6
       }
       this.scale = newScale
       this.game.world.scale.setTo(newScale)

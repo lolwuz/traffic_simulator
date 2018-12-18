@@ -34,7 +34,9 @@ export default class Traffic extends Phaser.Sprite {
   }
 
   update () {
-    if (this.isColliding) {
+    if (socket.readyState !== 1) {
+      this.body.velocity.x = 0
+      this.body.velocity.y = 0
       return
     }
 
@@ -130,7 +132,6 @@ export default class Traffic extends Phaser.Sprite {
             let sendArray = [point.light]
             let jsonString = JSON.stringify(sendArray)
             // let arrayBuffer = StringToArrayBuffer(jsonString)
-
             socket.send(jsonString)
 
             if (lights.status === 'green') {
@@ -160,11 +161,12 @@ export default class Traffic extends Phaser.Sprite {
     let angle = rad / Math.PI * 180
     let velocityX = (tx / distance) * this.speed
     let velocityY = (ty / distance) * this.speed
+    let deltaTime = this.game.time.elapsed
 
     if (!(this.isClose || this.isColliding)) {
       this.body.angle = angle
-      this.body.velocity.x = velocityX * 4
-      this.body.velocity.y = velocityY * 4
+      this.body.velocity.x = velocityX * deltaTime
+      this.body.velocity.y = velocityY * deltaTime
     }
   }
 
