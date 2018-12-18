@@ -2,6 +2,7 @@
 import Phaser from 'phaser'
 import intersects from '../intersects.json'
 import { ArrayBufferToString, StringToArrayBuffer } from '../binairyframe'
+import trajectory from '../trajectory'
 
 export default class Traffic extends Phaser.Sprite {
   constructor ({game, x, y, asset, trajectoryArray, speed, type, anchorPoint, mass, lookAhead}) {
@@ -30,6 +31,8 @@ export default class Traffic extends Phaser.Sprite {
     this.anchor.x = anchorPoint
     this.alpha = 0
 
+    this.alive = true
+
     this.intersects = intersects
   }
 
@@ -37,6 +40,14 @@ export default class Traffic extends Phaser.Sprite {
     if (socket.readyState !== 1) {
       this.body.velocity.x = 0
       this.body.velocity.y = 0
+    }
+    if (this.lifespan > 0 && this.lifespan < 2000 && this.alive) {
+      this.alive = false
+      this.loadTexture('kaboom', 0)
+      this.animations.add('kaboom')
+      this.animations.play('kaboom', 30, false, true)
+    }
+    if (this.isColliding) {
       return
     }
 
@@ -95,6 +106,7 @@ export default class Traffic extends Phaser.Sprite {
       let isColliding = this.isIntersect(bodyName, thisName)
 
       if (isColliding || bodyB.sprite.isColliding || this.isColliding) {
+
         bodyB.sprite.isColliding = true
         this.isColliding = true
 
@@ -109,6 +121,7 @@ export default class Traffic extends Phaser.Sprite {
 
   onKilled () {
     console.log('IM KILLED')
+
     this.destroy()
   }
 

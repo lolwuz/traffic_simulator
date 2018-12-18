@@ -316,8 +316,8 @@ export default class Game extends Phaser.State {
   }
 
   homePressed () {
-    for (let i = 0; i < trajectory.bicycleNorthEast.length; i++) {
-      let newPoint = new Phaser.Point(trajectory.bicycleNorthEast[i].x, trajectory.bicycleNorthEast[i].y)
+    for (let i = 0; i < trajectory.trainWestEast1.length; i++) {
+      let newPoint = new Phaser.Point(trajectory.trainWestEast1[i].x, trajectory.trainWestEast1[i].y)
       this.points.push(newPoint)
     }
     console.log(this.lines)
