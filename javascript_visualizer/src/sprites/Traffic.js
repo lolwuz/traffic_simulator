@@ -233,7 +233,7 @@ export default class Traffic extends Phaser.Sprite {
   }
 
   isIntersect (nameA, nameB) {
-    if (nameA == null || nameB == null || nameA === nameB) {
+    if (nameA == null || nameB == null || nameA === nameB || nameA === 'E1' || nameB === 'E1') {
       return false
     }
 

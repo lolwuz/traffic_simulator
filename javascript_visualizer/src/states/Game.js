@@ -74,7 +74,6 @@ export default class Game extends Phaser.State {
     this.updatePosition(pointer)
     this.updateLights()
     this.game.hef = this.updateHefboom()
-    console.log(this.game.hef)
   }
 
   updateHefboom() {
@@ -82,13 +81,16 @@ export default class Game extends Phaser.State {
     let isF2 = false
     for (let i = 0; i < serverData.length; i++) {
       if (serverData[i].light === 'F1') {
-        isF1 = serverData[i] === 'green'
+        if (serverData[i].status === 'green') {
+          isF1 = true
+        }
       }
       if (serverData[i].light === 'F2') {
-        isF2 = serverData[i] === 'green'
+        if (serverData[i].status === 'green') {
+          isF2 = true
+        }
       }
     }
-
     return (isF1 || isF2)
   }
 
@@ -265,6 +267,10 @@ export default class Game extends Phaser.State {
         let lights = trajectory[property]
         for (let i = 0; i < lights.length; i++) {
           if (typeof lights[i].light !== 'undefined' && typeof lights[i].light !== 'undefined') {
+            if (lights[i].light === 'E1') {
+              continue
+            }
+
             let graphics = this.game.add.graphics(lights[i].x, lights[i].y)
 
             // draw a circle
