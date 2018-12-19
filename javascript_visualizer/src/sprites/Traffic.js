@@ -44,6 +44,7 @@ export default class Traffic extends Phaser.Sprite {
     }
     if (this.lifespan > 0 && this.lifespan < 2000 && this.alive) {
       this.alive = false
+      this.body.enable = false
       this.loadTexture('kaboom', 0)
       this.animations.add('kaboom')
       this.animations.play('kaboom', 30, false, true)
