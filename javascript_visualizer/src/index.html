@@ -71,17 +71,20 @@
   let serverData = []
 
   setServerData()
-  openConnection()
 
   $("#connect-button").click( function() {
     openConnection()
   });
 
   function openConnection() {
+    if (socket != null) {
+      socket.close();
+    }
+
     let ip = $("#ip").val();
     let port = $("#port").val();
     socket = new WebSocket('ws://' + ip + ':' + port);
-    addEvents()
+    addEvents();
   }
 
   function addEvents() {
@@ -99,7 +102,7 @@
     socket.addEventListener('error', function (event) {
       console.log('Connection error');
       $('#connect').html("Connection error");
-      // openConnection()
+      socket.close()
     })
 
     socket.addEventListener('message', function (event) {
