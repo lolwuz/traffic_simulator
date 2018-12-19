@@ -107,7 +107,6 @@ export default class Game extends Phaser.State {
     let speed
     let type
     let mass
-    let position
     let isPedestrian = false
 
     if (percentage <= 30) {
@@ -119,7 +118,7 @@ export default class Game extends Phaser.State {
       speed = 10.00
       type = 'car'
       mass = 750
-      position = this.checkTrajectory(trajectIndex, key)
+      if (!this.checkTrajectory(key)) return
     } else if (percentage <= 32) {
       // Van
       trajectories = Object.keys(trajectory).slice(0, 11 + 1)
@@ -129,7 +128,7 @@ export default class Game extends Phaser.State {
       speed = 10.00
       type = 'van'
       mass = 800
-      // if (!this.checkTrajectory(trajectIndex, key)) return
+      if (!this.checkTrajectory(key)) return
     } else if (percentage <= 34) {
       // Motor
       trajectories = Object.keys(trajectory).slice(0, 11 + 1)
@@ -139,7 +138,7 @@ export default class Game extends Phaser.State {
       sprite = this.motor_sprites[Math.floor(Math.random() * this.motor_sprites.length)]
       type = 'motor'
       mass = 700
-      // if (!this.checkTrajectory(trajectIndex, key)) return
+      if (!this.checkTrajectory(key)) return
     } else if (percentage <= 64) {
       // Pedestrian
       trajectories = Object.keys(trajectory).slice(24, 29 + 1)
@@ -177,7 +176,7 @@ export default class Game extends Phaser.State {
       speed = 10.00
       type = 'bus'
       mass = 900
-      // if (!this.checkTrajectory(trajectIndex, key)) return
+      if (!this.checkTrajectory(key)) return
     } else if (percentage <= 98) {
       // Truck
       trajectories = Object.keys(trajectory).slice(0, 11 + 1)
@@ -187,7 +186,7 @@ export default class Game extends Phaser.State {
       speed = 10.00
       type = 'truck'
       mass = 950
-      // if (!this.checkTrajectory(trajectIndex, key)) return
+      if (!this.checkTrajectory(key)) return
     } else if (percentage <= 99) {
       // Train
       trajectories = Object.keys(trajectory).slice(20, 23 + 1)
@@ -228,34 +227,36 @@ export default class Game extends Phaser.State {
     this.game.add.existing(newTraffic)
   }
 
-  checkTrajectory (trajectIndex, key) {
+  checkTrajectory (key) {
     let currentTrajectory = trajectory[key]
     let allChildren = this.game.world.children
     let laneLength = 0
     let carsInLane = 0
-    let carsWidth = 0
-    let position
+    let laneStops = true
 
+    for (let p = 0; p < currentTrajectory.length; p++) {
+      let light = currentTrajectory[p]
+      if (typeof light.light !== 'undefined') {
+        laneLength = (Math.sqrt(Math.pow((light.x) - (currentTrajectory[0].x), 2) + Math.pow((light.y) - (currentTrajectory[0].y), 2))) - 120
+        if (key.toString() === 'carSouthEast' || key.toString() === 'carSouthNorth' || key.toString() === 'carWestEast' || key.toString() === 'carWestSouth') {
+          laneLength = laneLength / 2
+        }
+      }
+    }
     for (let i = 0; i < allChildren.length; i++) {
       if (allChildren[i].constructor === Traffic) {
         if (allChildren[i].trajectoryArray === currentTrajectory) {
-          for (let j = 0; j < allChildren[i].trajectoryArray.length; j++) {
-            let light = allChildren[i].trajectoryArray[j]
-            if (typeof light.light !== 'undefined') {
-              laneLength = Math.sqrt(Math.pow((light.x) - (allChildren[i].trajectoryArray[0].x), 2) + Math.pow((light.y) - (allChildren[i].trajectoryArray[0].y), 2))
-              if (allChildren[i].trajectoryArrayPassed.length >= 0) {
-                carsInLane += allChildren[i].width
-                if (carsInLane >= laneLength) {
-                  carsWidth += allChildren[i].width
-                }
-              }
+          if (allChildren[i].trajectoryArrayPassed.length >= 0) {
+            carsInLane += allChildren[i].width
+            if (carsInLane >= laneLength) {
+              laneStops = false
+              break
             }
           }
         }
       }
     }
-    position = { x: trajectory[key][0].x, y: trajectory[key][0].y - carsWidth }
-    return position
+    return laneStops
   }
 
   createLights () {
