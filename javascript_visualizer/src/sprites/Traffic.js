@@ -37,11 +37,18 @@ export default class Traffic extends Phaser.Sprite {
   }
 
   update () {
+    if (socket == null) {
+      this.body.velocity.x = 0
+      this.body.velocity.y = 0
+      return
+    }
+
     if (socket.readyState !== 1) {
       this.body.velocity.x = 0
       this.body.velocity.y = 0
       return
     }
+    
     if (this.lifespan > 0 && this.lifespan < 2000 && this.alive) {
       this.alive = false
       this.body.enable = false
