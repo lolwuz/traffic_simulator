@@ -56,6 +56,7 @@ export default class Traffic extends Phaser.Sprite {
       this.animations.add('kaboom')
       this.animations.play('kaboom', 30, false, true)
     }
+
     if (this.isColliding) {
       return
     }
