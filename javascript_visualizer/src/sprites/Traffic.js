@@ -174,6 +174,12 @@ export default class Traffic extends Phaser.Sprite {
         }
       }
 
+      if (point.light === 'E1') {
+        if (this.game.hef) {
+          this.stopped = true
+        }
+      }
+
       if (!this.stopped) {
         this.trajectoryArrayPassed.push(i)
       }

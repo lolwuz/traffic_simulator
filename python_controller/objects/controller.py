@@ -78,7 +78,6 @@ class Controller:
                 del self.waiting_times[index]
                 self.entries.remove(light.name)
 
-
     def is_intersecting(self, light_one, light_two) -> bool:
         """
         Determines if lights are intersecting

@@ -9,7 +9,7 @@ class Light:
         self.new_status = ""
         self.timer = 0  # Timer for traffic lights with a estimation timer
         self.last_green = time.time()
-        self.minimum_time = 15.0  # The lights minimum green Time
+        self.minimum_time = 20.0  # The lights minimum green Time
         self.next_change = float('inf')
 
     def to_dict(self) -> dict:

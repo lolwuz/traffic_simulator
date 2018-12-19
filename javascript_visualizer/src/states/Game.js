@@ -10,6 +10,7 @@ export default class Game extends Phaser.State {
     this.scale = 1
     this.lastX = 0
     this.lastY = 0
+    this.game.hef = false
 
     this.cursor = this.game.input.keyboard.createCursorKeys()
     this.camera = this.game.camera
@@ -72,6 +73,23 @@ export default class Game extends Phaser.State {
     this.updateScale(pointer)
     this.updatePosition(pointer)
     this.updateLights()
+    this.game.hef = this.updateHefboom()
+    console.log(this.game.hef)
+  }
+
+  updateHefboom() {
+    let isF1 = false
+    let isF2 = false
+    for (let i = 0; i < serverData.length; i++) {
+      if (serverData[i].light === 'F1') {
+        isF1 = serverData[i] === 'green'
+      }
+      if (serverData[i].light === 'F2') {
+        isF2 = serverData[i] === 'green'
+      }
+    }
+
+    return (isF1 || isF2)
   }
 
   render () {

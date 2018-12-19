@@ -111,11 +111,13 @@ class SimpleServer(WebSocket):
 
                     for entry in entry_from_json:
                         if entry not in controller.light_names:
+                            entry_from_json.remove(entry)
                             raise Exception(entry + ' value not in light names')
 
                     controller.entry(entry_from_json)
                 except Exception as error:
-                    self.sendMessage("Exception: " + repr(error))
+                    pass
+                    # self.sendMessage("Exception: " + repr(error))
 
 
 if __name__ == "__main__":
