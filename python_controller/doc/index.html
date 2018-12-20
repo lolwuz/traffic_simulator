@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
+<title>controller.py</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 7952 2016-07-26 18:15:59Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: grey; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document">
+
+
+<p>import time
+from constants import MINIMUM_TIMES, _PHASES, MARGINS
+from objects.light import Light
+import json</p>
+<dl class="docutils">
+<dt>class Controller:</dt>
+<dd><dl class="first last docutils">
+<dt>def __init__(self, client, traffic_lights, intersections):</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Controller</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param traffic_lights:</th></tr>
+<tr class="field"><td>&nbsp;</td><td class="field-body">list of traffic_light names</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">param intersections:</th></tr>
+<tr class="field"><td>&nbsp;</td><td class="field-body">2d numpy array of intersections</td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 14)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+self.client = client
+self.last_send = dict()
+self.light_names = traffic_lights
+self.intersections = intersections
+self.entries = []
+self.waiting_times = []
+self.lights = []
+self.phases = _PHASES</p>
+<p>self.current_phase = &quot;&quot;
+self.total_entries = 0
+self.mode = &quot;normal&quot;
+self.is_entry = False</p>
+<p class="last">self.start()  # Set defaults for this controller</p>
+</dd>
+<dt>def start(self):</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Set defaults for this controller</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">return:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 36)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+for name in self.light_names:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 38)</p>
+Unexpected indentation.</div>
+<blockquote>
+self.lights.append(Light(name, MARGINS[name]))</blockquote>
+<p># Build phases
+for key in self.phases:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 42)</p>
+Unexpected indentation.</div>
+<blockquote>
+self.phases[key] = self.get_complete_phase(self.phases[key])</blockquote>
+<p class="last">self.send()</p>
+</dd>
+<dt>def send(self):</dt>
+<dd><p class="first">&quot;&quot;&quot; Serialize list of lights to JSON and send &quot;&quot;&quot;
+dict_array = []</p>
+<dl class="last docutils">
+<dt>for light in self.lights:</dt>
+<dd>dict_array.append(light.to_dict())</dd>
+<dt>if dict_array != self.last_send:  # Only send when lights have changed</dt>
+<dd><p class="first">self.last_send = dict_array
+send_json = json.dumps(dict_array)</p>
+<p class="last">self.client.sendMessage(send_json)</p>
+</dd>
+</dl>
+</dd>
+<dt>def entry(self, entries):</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Called from the server when a new road user has entered the simulation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param entries:</th><td class="field-body">List of entered users</td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 64)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+for name in entries:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 66)</p>
+Unexpected indentation.</div>
+<blockquote>
+<dl class="docutils">
+<dt>if name not in self.entries:</dt>
+<dd>self.entries.append(name)
+self.waiting_times.append(time.time())
+self.total_entries += 1</dd>
+</dl>
+</blockquote>
+<dl class="last docutils">
+<dt>if self.total_entries &gt; 0:</dt>
+<dd>self.is_entry = True</dd>
+<dt>for light in self.lights:</dt>
+<dd><dl class="first last docutils">
+<dt>if light.status == &quot;green&quot; and light.name in self.entries:</dt>
+<dd>index = self.entries.index(light.name)
+del self.waiting_times[index]
+self.entries.remove(light.name)</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>def is_intersecting(self, light_one, light_two) -&gt; bool:</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Determines if lights are intersecting</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param light_one:</th></tr>
+<tr class="field"><td>&nbsp;</td><td class="field-body">Light name</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">param light_two:</th></tr>
+<tr class="field"><td>&nbsp;</td><td class="field-body">Light name</td>
+</tr>
+<tr class="field"><th class="field-name">return:</th><td class="field-body">A boolean if intersect between lights is found</td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 87)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+light_index = self.light_names.index(light_one)
+entry_index = self.light_names.index(light_two)
+intersect = self.intersections[light_index][entry_index + 1]</p>
+<p class="last">return intersect == '1'</p>
+</dd>
+<dt>def get_complete_phase(self, phase) -&gt; list:</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Determines what lights are allowed in this phase</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param phase:</th><td class="field-body">Phase lights</td>
+</tr>
+<tr class="field"><th class="field-name">return:</th><td class="field-body">A list of lights</td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 100)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+intersecting_lights = []  # Lights that cannot be used in this phase
+for phase_light in phase:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 103)</p>
+Unexpected indentation.</div>
+<blockquote>
+<dl class="docutils">
+<dt>for light in self.light_names:</dt>
+<dd><dl class="first last docutils">
+<dt>if self.is_intersecting(phase_light, light):</dt>
+<dd>intersecting_lights.append(light)</dd>
+</dl>
+</dd>
+</dl>
+</blockquote>
+<dl class="docutils">
+<dt>for light in self.light_names:</dt>
+<dd><dl class="first last docutils">
+<dt>if light not in intersecting_lights and light not in phase:</dt>
+<dd><dl class="first last docutils">
+<dt>if light[0] != &quot;A&quot;:  # Add no driving lane</dt>
+<dd>phase.append(light)  # Light is not intersecting so it can be added to the phase</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="last">return phase</p>
+</dd>
+<dt>def get_best_phase(self) -&gt; list:</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Checks for every phase what scores it get according to:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 117)</p>
+Unexpected indentation.</div>
+<blockquote>
+<ul class="simple">
+<li>Most matched entries with lights in phase</li>
+<li>How long entries have been waiting</li>
+<li>Is there a train inbound (switch to best phase without F1/2)</li>
+</ul>
+</blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">return:</th><td class="field-body">Key of best phase and score in a list</td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 122)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+best_phase = [&quot;A_NORTH&quot;, 0]</p>
+<dl class="docutils">
+<dt>for key in self.phases:</dt>
+<dd><p class="first">phase = self.phases[key]
+score = 0
+for entry in self.entries:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 129)</p>
+Unexpected indentation.</div>
+<blockquote>
+<dl class="docutils">
+<dt>if entry in phase:</dt>
+<dd>waiting_factor = self.get_waiting_factor(entry)
+score += 10
+score += 10 ** waiting_factor</dd>
+</dl>
+</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 133)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<dl class="last docutils">
+<dt>if score &gt; best_phase[1]:</dt>
+<dd>best_phase = [key, score]</dd>
+</dl>
+</dd>
+</dl>
+<p class="last">return best_phase</p>
+</dd>
+<dt>def get_waiting_factor(self, name) -&gt; int:</dt>
+<dd><p class="first">&quot;&quot;&quot; Calculates a factor based on waiting time &quot;&quot;&quot;
+index = self.entries.index(name)</p>
+<p>diff = int(time.time() - self.waiting_times[index])
+factor = round(diff / 20)</p>
+<dl class="docutils">
+<dt>if name == &quot;D1&quot;:  # Bus factor is higher</dt>
+<dd>factor = 4</dd>
+<dt>if name in [&quot;F1&quot;, &quot;F2&quot;]:</dt>
+<dd><dl class="first last docutils">
+<dt>if name in self.entries:</dt>
+<dd>factor = 10</dd>
+<dt>else:</dt>
+<dd>factor = 0</dd>
+</dl>
+</dd>
+</dl>
+<p class="last">return factor</p>
+</dd>
+<dt>def get_light(self, name) -&gt; Light:</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Returns the correct light from the lights list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param name:</th><td class="field-body"></td>
+</tr>
+<tr class="field"><th class="field-name">return:</th><td class="field-body">light</td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 162)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+return_light = None
+for light in self.lights:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 165)</p>
+Unexpected indentation.</div>
+<blockquote>
+<dl class="docutils">
+<dt>if light.name == name:</dt>
+<dd>return_light = light</dd>
+</dl>
+</blockquote>
+<p class="last">return return_light</p>
+</dd>
+<dt>def initialize_phase(self, phase_name):</dt>
+<dd><p class="first">&quot;&quot;&quot;
+Check if the lights can change and switch lights</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">param phase_name:</th></tr>
+<tr class="field"><td>&nbsp;</td><td class="field-body">name of the phase</td>
+</tr>
+</tbody>
+</table>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 175)</p>
+Field list ends without a blank line; unexpected unindent.</div>
+<p>&quot;&quot;&quot;
+for light in self.lights:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 177)</p>
+Unexpected indentation.</div>
+<blockquote>
+<dl class="docutils">
+<dt>if not light.is_allowed_to_change() or not self.is_entry:</dt>
+<dd>return</dd>
+</dl>
+</blockquote>
+<p>self.current_phase = phase_name
+phase = self.phases[phase_name]
+for name in self.light_names:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 183)</p>
+Unexpected indentation.</div>
+<blockquote class="last">
+<p>light = self.get_light(name)
+if name in phase:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 185)</p>
+Unexpected indentation.</div>
+<blockquote>
+light.switch_status(&quot;green&quot;)</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 186)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<dl class="docutils">
+<dt>else:</dt>
+<dd>light.switch_status(&quot;red&quot;)</dd>
+</dl>
+</blockquote>
+</dd>
+<dt>def initialize_mode(self):</dt>
+<dd><p class="first">&quot;&quot;&quot; Starts a special mode when Controller.mode is not 'normal' &quot;&quot;&quot;
+phase = []
+if self.mode == &quot;chaos&quot;:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 193)</p>
+Unexpected indentation.</div>
+<blockquote>
+phase = self.light_names</blockquote>
+<dl class="last docutils">
+<dt>for name in self.light_names:</dt>
+<dd><p class="first">light = self.get_light(name)
+if name in phase:</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 198)</p>
+Unexpected indentation.</div>
+<blockquote>
+light.switch_status(&quot;green&quot;)</blockquote>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">/Users/lolwuz/Documents/GitHub/traffic_simulator/python_controller/objects/controller.py</tt>, line 199)</p>
+Block quote ends without a blank line; unexpected unindent.</div>
+<dl class="last docutils">
+<dt>else:</dt>
+<dd>light.switch_status(&quot;red&quot;)</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>def update(self):</dt>
+<dd><p class="first">&quot;&quot;&quot; Check for changes &quot;&quot;&quot;
+best_phase = self.get_best_phase()</p>
+<dl class="docutils">
+<dt>if self.mode == &quot;normal&quot;:</dt>
+<dd>self.initialize_phase(best_phase[0])</dd>
+<dt>else:</dt>
+<dd>self.initialize_mode()</dd>
+<dt>for light in self.lights:</dt>
+<dd><p class="first">light.update()</p>
+<dl class="last docutils">
+<dt>if light.status == &quot;green&quot; and light.name in self.entries:</dt>
+<dd>index = self.entries.index(light.name)
+del self.waiting_times[index]
+self.entries.remove(light.name)</dd>
+</dl>
+</dd>
+</dl>
+<p class="last">self.send()</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+</body>
+</html>

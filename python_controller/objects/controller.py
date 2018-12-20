@@ -8,6 +8,7 @@ class Controller:
     def __init__(self, client, traffic_lights, intersections):
         """
         Controller
+
         :param traffic_lights: list of traffic_light names
         :param intersections: 2d numpy array of intersections
         """
@@ -30,10 +31,9 @@ class Controller:
     def start(self):
         """
         Set defaults for this controller
+
         :return:
         """
-
-        print(self.light_names)
         for name in self.light_names:
             self.lights.append(Light(name, MARGINS[name]))
 
@@ -41,8 +41,6 @@ class Controller:
         for key in self.phases:
             self.phases[key] = self.get_complete_phase(self.phases[key])
 
-        print("phases")
-        print(self.phases)
         self.send()
 
     def send(self):
@@ -61,6 +59,7 @@ class Controller:
     def entry(self, entries):
         """
         Called from the server when a new road user has entered the simulation
+
         :param entries: List of entered users
         """
         for name in entries:
@@ -81,6 +80,7 @@ class Controller:
     def is_intersecting(self, light_one, light_two) -> bool:
         """
         Determines if lights are intersecting
+
         :param light_one: Light name
         :param light_two: Light name
         :return: A boolean if intersect between lights is found
@@ -91,9 +91,10 @@ class Controller:
 
         return intersect == '1'
 
-    def get_complete_phase(self, phase) -> str:
+    def get_complete_phase(self, phase) -> list:
         """
         Determines what lights are allowed in this phase
+
         :param phase: Phase lights
         :return: A list of lights
         """
@@ -116,6 +117,7 @@ class Controller:
             - Most matched entries with lights in phase
             - How long entries have been waiting
             - Is there a train inbound (switch to best phase without F1/2)
+
         :return: Key of best phase and score in a list
         """
         best_phase = ["A_NORTH", 0]
@@ -154,6 +156,7 @@ class Controller:
     def get_light(self, name) -> Light:
         """
         Returns the correct light from the lights list
+
         :param name:
         :return: light
         """
@@ -167,6 +170,7 @@ class Controller:
     def initialize_phase(self, phase_name):
         """
         Check if the lights can change and switch lights
+
         :param phase_name: name of the phase
         """
         for light in self.lights:
@@ -213,6 +217,3 @@ class Controller:
                 self.entries.remove(light.name)
 
         self.send()
-
-
-
