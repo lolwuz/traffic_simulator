@@ -65,10 +65,10 @@ class SimpleServer(WebSocket):
     def handleConnected(self):
         """ A new client was added to the server """
         print(self.address[0])
-        if self.address[0] == _ADDRESS:
-            print("info server has connected")
-            info_clients.append(self)
-            return
+        # if self.address[0] == _ADDRESS:
+        #     print("info server has connected")
+        #     info_clients.append(self)
+        #     return
 
         print("client has connected: " + self.address[0])
 
